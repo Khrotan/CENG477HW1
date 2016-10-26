@@ -4,9 +4,9 @@
 #include <iostream>
 
 class Color {
+public:
     float _channels[3];
 
-public:
     Color();
     Color(float r, float g, float b);
 

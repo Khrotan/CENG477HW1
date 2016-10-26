@@ -1,6 +1,7 @@
 #ifndef RAYTRACER_SPHERE_H
 #define RAYTRACER_SPHERE_H
 
+#include <Math.h>
 #include "Ray.h"
 
 class Sphere {

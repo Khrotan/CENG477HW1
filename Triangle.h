@@ -6,15 +6,14 @@
 class Triangle
 {
 public:
+    Vector3 Vid1;
+    Vector3 Vid2;
+    Vector3 Vid3;
+
     // This function gets a ray, and if the triangle intersects with the ray, returns true and fills the hitInfo struct
     // Else return false and leave hitInfo unchanged
     bool Intersect(const Ray& ray, RayHitInfo& hitInfo) const;
 };
-
-bool Triangle::Intersect( const Ray& ray, RayHitInfo& hitInfo ) const
-{
-    return false;
-}
 
 #endif //RAYTRACER_TRIANGLE_H
 
