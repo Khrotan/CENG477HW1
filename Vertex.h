@@ -4,9 +4,9 @@
 #include "Vector3.h"
 
 class Vertex {
+public:
     Vector3 _position;
 
-public:
     Vertex() = default;
     explicit Vertex(Vector3 position);
 

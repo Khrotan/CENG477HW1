@@ -11,6 +11,11 @@ class Material {
     /// PUT YOUR VARIABLES, HELPER FUNCTIONS HERE !
     //////////////////
 public:
+    Color ambient;
+    Color diffuse;
+    Color specular;
+    int specExp;
+    Color reflectance;
 
     /*
      * Implement a Calculate function that does Diffuse, Specular and Ambient, Reflective shading
