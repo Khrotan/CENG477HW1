@@ -36,7 +36,7 @@ bool Sphere::Intersect( const Ray& ray, RayHitInfo& hitInfo ) const
             hitInfo.Parameter = t_2;
         }
 
-        hitInfo.Normal = ( hitInfo.Position - this->center ) / this->radius;
+        hitInfo.Normal = ( ( hitInfo.Position - this->center ) / this->radius );
 
         return true;
     }

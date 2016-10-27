@@ -11,9 +11,9 @@ class Material {
     /// PUT YOUR VARIABLES, HELPER FUNCTIONS HERE !
     //////////////////
 public:
-    Color ambient;
-    Color diffuse;
-    Color specular;
+    Color ambientCoefficient;
+    Color diffuseCoefficient;
+    Color specularCoefficient;
     int specExp;
     Color reflectance;
 

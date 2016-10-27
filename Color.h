@@ -25,6 +25,13 @@ public:
         return _channels[2];
     }
 
+    Color operator*(Color c) const
+    {
+        return Color(this->_channels[0] * c._channels[0],
+                     this->_channels[1] * c._channels[1],
+                     this->_channels[2] * c._channels[2]);
+    }
+
     Color operator*(float c) const
     {
         return Color(_channels[0] * c,

@@ -91,15 +91,17 @@ Vector3 Vector3::operator/( double scalar ) const
     return returnVector;
 }
 
-void Vector3::normalize()
+Vector3 Vector3::normalize()
 {
     double length = this->getLength();
     this->_data[0] /= length;
     this->_data[1] /= length;
     this->_data[2] /= length;
+
+    return *this;
 }
 
 double Vector3::getLength()
 {
-    return sqrtf( this->_data[0] * this->_data[0] ) + ( this->_data[1] * this->_data[1] ) + ( this->_data[2] * this->_data[2] );
+    return sqrt( this->_data[0] * this->_data[0] + this->_data[1] * this->_data[1] + this->_data[2] * this->_data[2] );
 }

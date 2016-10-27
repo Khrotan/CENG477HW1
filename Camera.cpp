@@ -10,12 +10,12 @@
 
 Image Camera::Render() const
 {
-    Image outputImg( this->_imagePlane.Width, this->_imagePlane.Height, CurrentScene->_background );
+    Image outputImg( this->_imagePlane.Width, this->_imagePlane.Height, CurrentScene->_backgroundColour );
 
     for ( int i = 0 ; i < this->_imagePlane.Width ; i++ ) {
         for ( int j = 0 ; j < this->_imagePlane.Height ; j++ ) {
-            double s_u = ( _imagePlane.Right - _imagePlane.Left ) * ( ((double) i ) + 0.5 ) / (_imagePlane.Width);
-            double s_v = ( _imagePlane.Right - _imagePlane.Left ) * ( ((double) j ) + 0.5 ) / (_imagePlane.Height);
+            double s_u = ( _imagePlane.Right - _imagePlane.Left ) * ( ((double) j ) + 0.5 ) / (_imagePlane.Width);
+            double s_v = ( _imagePlane.Right - _imagePlane.Left ) * ( ((double) i ) + 0.5 ) / (_imagePlane.Height);
 
             Vector3 m = this->_position + this->_gaze * this->_imagePlane.Distance;
             Vector3 q = m + this->_space.Left * this->_imagePlane.Left + this->_space.Up * this->_imagePlane.Top;
@@ -49,40 +49,62 @@ Image Camera::Render() const
 
             if ( t_min_sphere < t_min_mesh ) {
                 //ambient
-                outputImg.Pixel( i,j ) = CurrentScene->_materials[closestSphere.materialId].ambient;
+                outputImg.Pixel( i,j ) = CurrentScene->_ambientLight * CurrentScene->_materials[closestSphere.materialId].ambientCoefficient ;
                 for ( const auto& light : CurrentScene->_lights ) {
-                    //diffuse
-                    Vector3 w_i = ( light.position - rayHitInfo.Position );
-                    w_i.normalize();
+                    //shadow
+                    bool isInShadow = false;
+                    RayHitInfo shadowHitInfo;
+                    Ray shadowRay( rayHitInfo.Position, light.position - rayHitInfo.Position );
+                    for ( const auto& sphere : CurrentScene->_spheres ) {
+                        if ( &sphere == &closestSphere ) {
+                            continue;
+                        }
+                        if ( sphere.Intersect( shadowRay, shadowHitInfo ) == true ) {
+                            isInShadow = true;
+                            break;
+                        }
+                    }
 
-                    double cos_theta_prime = max(0.0, w_i.dotProduct( rayHitInfo.Normal ));
+                    if (  isInShadow == false )
+                    {
+                        //diffuse
+                        Vector3 w_i = ( light.position - rayHitInfo.Position ).normalize();
 
-                    //Color color = CurrentScene->_materials[closestSphere.materialId].diffuse * cos_theta_prime * light.intensity
-                    //Color diffuseColor = CurrentScene->_materials[closestSphere.materialId].diffuse * cos_theta_prime;
+                        double cos_theta_prime = max(0.0, w_i.dotProduct( rayHitInfo.Normal ));
 
-                    double radiance = ( cos_theta_prime / ( light.position - rayHitInfo.Position ).getLength() );
+                        Color incomingRadiance = light.intensity / ( ( rayHitInfo.Position - light.position ).getLength() * ( rayHitInfo.Position - light.position ).getLength() );
 
-                    Color diffuseColor = light.intensity * radiance;
+                        Color diffuseColor =  incomingRadiance * cos_theta_prime * CurrentScene->_materials[closestSphere.materialId].diffuseCoefficient;
 
-                    outputImg.Pixel( i,j )._channels[0] += diffuseColor._channels[0];
-                    outputImg.Pixel( i,j )._channels[1] += diffuseColor._channels[1];
-                    outputImg.Pixel( i,j )._channels[2] += diffuseColor._channels[2];
+                        outputImg.Pixel( i,j )._channels[0] += diffuseColor._channels[0];
+                        outputImg.Pixel( i,j )._channels[1] += diffuseColor._channels[1];
+                        outputImg.Pixel( i,j )._channels[2] += diffuseColor._channels[2];
 
-                    //billy phong
-                    Vector3 half_vector = ( w_i + this->_space.Forward );
-                    half_vector.normalize();
+                        //billy phong
+                        Vector3 half_vector = ( w_i + this->_space.Forward ).normalize();
 
-                    double cos_alpha_prime = max(0.0, half_vector.dotProduct( rayHitInfo.Normal ));
-                    cos_alpha_prime = pow( cos_alpha_prime, CurrentScene->_materials[closestSphere.materialId].specExp );
+                        double cos_alpha_prime = max(0.0, half_vector.dotProduct( rayHitInfo.Normal ));
+                        cos_alpha_prime = pow( cos_alpha_prime, CurrentScene->_materials[closestSphere.materialId].specExp );
 
-                    radiance = ( cos_alpha_prime / ( light.position - rayHitInfo.Position ).getLength() );
+                        Color billyPhongColor = incomingRadiance * cos_alpha_prime * CurrentScene->_materials[closestSphere.materialId].specularCoefficient;
 
-                    Color billyPhongColor = light.intensity * radiance;
+                        outputImg.Pixel( i,j )._channels[0] += billyPhongColor._channels[0];
+                        outputImg.Pixel( i,j )._channels[1] += billyPhongColor._channels[1];
+                        outputImg.Pixel( i,j )._channels[2] += billyPhongColor._channels[2];
+                    }
 
-                    outputImg.Pixel( i,j )._channels[0] += billyPhongColor._channels[0];
-                    outputImg.Pixel( i,j )._channels[1] += billyPhongColor._channels[1];
-                    outputImg.Pixel( i,j )._channels[2] += billyPhongColor._channels[2];
+
                 }
+            }
+
+            if ( outputImg.Pixel( i, j )._channels[0] > 255 ) {
+                outputImg.Pixel( i, j )._channels[0] = 255;
+            }
+            if ( outputImg.Pixel( i, j )._channels[1] > 255 ) {
+                outputImg.Pixel( i, j )._channels[1] = 255;
+            }
+            if ( outputImg.Pixel( i, j )._channels[2] > 255 ) {
+                outputImg.Pixel( i, j )._channels[2] = 255;
             }
         }
     }

@@ -26,8 +26,8 @@ public:
     std::vector<PointLight> _lights;
 
     int _rayReflect;
-    Color _background;
-    Color _ambient;
+    Color _backgroundColour;
+    Color _ambientLight;
 
     const std::vector<Camera>& Cameras() const {
         return _cameras;

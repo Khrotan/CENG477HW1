@@ -61,8 +61,8 @@ void ReadScene(int argc, char** argv)
     }
 
     infile >> scene->_rayReflect;
-    infile >> scene->_background;
-    infile >> scene->_ambient;
+    infile >> scene->_backgroundColour;
+    infile >> scene->_ambientLight;
 
     infile >> count;
     for ( int i = 0 ; i < count; i++ ) {
@@ -77,9 +77,9 @@ void ReadScene(int argc, char** argv)
         infile >> dummyString >> dummyString;
 
         Material dummyMaterial;
-        infile >> dummyMaterial.ambient;
-        infile >> dummyMaterial.diffuse;
-        infile >> dummyMaterial.specular >> dummyMaterial.specExp;
+        infile >> dummyMaterial.ambientCoefficient;
+        infile >> dummyMaterial.diffuseCoefficient;
+        infile >> dummyMaterial.specularCoefficient >> dummyMaterial.specExp;
         infile >> dummyMaterial.reflectance;
 
         scene->_materials.push_back(dummyMaterial);

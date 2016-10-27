@@ -13,7 +13,7 @@ public:
         return stream >> vertex._data[0] >> vertex._data[1] >> vertex._data[2];
     }
 
-    void normalize();
+    Vector3 normalize();
 
     double dotProduct( const Vector3& rhs ) const;
 
