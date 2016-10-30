@@ -36,23 +36,22 @@ Image Camera::Render() const
             Ray ray( this->_position, d );
             RayHitInfo rayHitInfo;
 
+            for ( const auto& mesh : CurrentScene->_meshes )
+            {
+                Triangle dummyTriangle;
+                if ( mesh.Intersect( ray, rayHitInfo, dummyTriangle ) == true && rayHitInfo.Parameter < t_min_mesh )
+                {
+                    t_min_mesh = rayHitInfo.Parameter;
+                    closestMesh = mesh;
+                }
+            }
+
             for ( const auto& sphere : CurrentScene->_spheres )
             {
                 if ( sphere.Intersect( ray, rayHitInfo ) == true && rayHitInfo.Parameter < t_min_sphere )
                 {
                     t_min_sphere = rayHitInfo.Parameter;
                     closestSphere = sphere;
-                }
-            }
-
-            for ( const auto& mesh : CurrentScene->_meshes )
-            {
-                RayHitInfo rayHitInfo;
-                Triangle dummyTriangle;
-                if ( mesh.Intersect( ray, rayHitInfo, dummyTriangle ) == true && rayHitInfo.Parameter < t_min_mesh )
-                {
-                    t_min_mesh = rayHitInfo.Parameter;
-                    closestMesh = mesh;
                 }
             }
 
@@ -80,13 +79,13 @@ Image Camera::Render() const
                 Color diffuseColor, incomingRadiance, billyPhongColor;
 
                 //shadow
-/*                bool isInShadow = false;
+                bool isInShadow = false;
                 RayHitInfo shadowHitInfo;
                 Ray shadowRay( rayHitInfo.Position, light.position - rayHitInfo.Position );
                 for ( const auto& sphere : CurrentScene->_spheres ) {
-                    if ( &sphere == &closestSphere ) {
+/*                    if ( &sphere == &closestSphere ) {
                         continue;
-                    }
+                    }*/
                     if ( sphere.Intersect( shadowRay, shadowHitInfo ) == true ) {
                         isInShadow = true;
                         break;
@@ -96,7 +95,7 @@ Image Camera::Render() const
                 if (  isInShadow == true )
                 {
                     continue;
-                }*/
+                }
 
                 //diffuse
                 Vector3 w_i = ( light.position - rayHitInfo.Position ).normalize();
@@ -115,7 +114,6 @@ Image Camera::Render() const
                 {
                     diffuseColor = incomingRadiance * cos_theta_prime *
                                    CurrentScene->_materials[closestMesh.materialId].diffuseCoefficient;
-                    cout << closestMesh.materialId << " " << CurrentScene->_materials[closestMesh.materialId].ambientCoefficient._channels[0] << endl;
                 }
 
                 outputImg.Pixel( i, j )._channels[0] += diffuseColor._channels[0];
@@ -164,6 +162,19 @@ Image Camera::Render() const
             if ( outputImg.Pixel( i, j )._channels[2] > 255 )
             {
                 outputImg.Pixel( i, j )._channels[2] = 255;
+            }
+
+            if ( outputImg.Pixel( i, j )._channels[0] < 0 )
+            {
+                outputImg.Pixel( i, j )._channels[0] = 0;
+            }
+            if ( outputImg.Pixel( i, j )._channels[1] < 0 )
+            {
+                outputImg.Pixel( i, j )._channels[1] = 0;
+            }
+            if ( outputImg.Pixel( i, j )._channels[2] < 0 )
+            {
+                outputImg.Pixel( i, j )._channels[2] = 0;
             }
         }
     }
