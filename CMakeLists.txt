@@ -29,7 +29,7 @@ set(SOURCE_FILES
     Sphere.h
     Triangle.h
     Vector3.h
-    Vertex.h Camera.cpp Sphere.cpp Scene.cpp Vector3.cpp)
+    Vertex.h Camera.cpp Sphere.cpp Scene.cpp Vector3.cpp Triangle.cpp Mesh.cpp)
 
 include_directories(.)
 include_directories(cameras)

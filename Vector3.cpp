@@ -8,15 +8,15 @@
 
 double Vector3::dotProduct( const Vector3& rhs ) const
 {
-    return this->_data[0] * rhs._data[0] + this->_data[1] * rhs._data[1] + this->_data[2] * rhs._data[2];
+    return ( this->_data[0] * rhs._data[0] + this->_data[1] * rhs._data[1] + this->_data[2] * rhs._data[2] );
 }
 
 Vector3 Vector3::crossProduct( const Vector3& rhs )
 {
     Vector3 returnVector;
-    returnVector._data[0] = this->_data[1] * rhs._data[2] - this->_data[2] * rhs._data[1];
-    returnVector._data[1] = this->_data[2] * rhs._data[0] - this->_data[0] * rhs._data[2];
-    returnVector._data[2] = this->_data[0] * rhs._data[1] - this->_data[1] * rhs._data[0];
+    returnVector._data[0] = ( this->_data[1] * rhs._data[2] - this->_data[2] * rhs._data[1] );
+    returnVector._data[1] = ( this->_data[2] * rhs._data[0] - this->_data[0] * rhs._data[2] );
+    returnVector._data[2] = ( this->_data[0] * rhs._data[1] - this->_data[1] * rhs._data[0] );
 
     return returnVector;
 }

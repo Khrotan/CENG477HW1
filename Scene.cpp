@@ -120,6 +120,8 @@ void ReadScene(int argc, char** argv)
                 infile >> vertId;
                 dummyTriangle.Vid3 = scene->_vertices[vertId]._position;
 
+                dummyTriangle.normal = (dummyTriangle.Vid2 - dummyTriangle.Vid1).crossProduct( dummyTriangle.Vid3 - dummyTriangle.Vid1 ).normalize();
+
                 dummyMesh.triangles.push_back( dummyTriangle );
             }
 
