@@ -4,6 +4,7 @@
 
 #include <math.h>
 #include "Vector3.h"
+#include "Color.h"
 
 
 double Vector3::dotProduct( const Vector3& rhs ) const
@@ -70,6 +71,17 @@ Vector3 Vector3::operator*( double scalar ) const
 
     return returnVector;
 }
+
+Color Vector3::operator*( Color c ) const
+{
+    Color returnColor;
+    returnColor._channels[0] = this->_data[0] * c._channels[0];
+    returnColor._channels[1] = this->_data[1] * c._channels[1];
+    returnColor._channels[2] = this->_data[2] * c._channels[2];
+
+    return returnColor;
+}
+
 
 Vector3 Vector3::operator/( float scalar ) const
 {

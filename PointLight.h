@@ -4,7 +4,7 @@
 class PointLight {
 public:
     Vector3 position;
-    Color intensity;
+    Vector3 intensity;
 };
 
 #endif //RAYTRACER_POINTLIGHT_H

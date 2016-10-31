@@ -6,18 +6,19 @@
 #include "Ray.h"
 #include "Mesh.h"
 
-bool Mesh::Intersect( const Ray& ray, RayHitInfo& hitInfo, Triangle& resultTriangle ) const
+bool Mesh::Intersect( const Ray& ray, RayHitInfo& hitInfo ) const
 {
-    double t_min_triangle = std::numeric_limits<double>::max();
+    float t_min_triangle = std::numeric_limits<float>::max();
 
     for ( const auto& triangle : this->triangles ) {
-        if ( triangle.Intersect( ray, hitInfo ) == true && hitInfo.Parameter < t_min_triangle ) {
-            resultTriangle = triangle;
-            t_min_triangle = hitInfo.Parameter;
+        if ( triangle.Intersect( ray, hitInfo ) == true ) {
+            if ( hitInfo.Parameter < t_min_triangle ) {
+                t_min_triangle = hitInfo.Parameter;
+            }
         }
     }
 
-    if ( t_min_triangle < std::numeric_limits<double>::max() ) {
+    if ( t_min_triangle < std::numeric_limits<float>::max() ) {
         return true;
     }
     return false;

@@ -4,7 +4,7 @@
 
 #include "Scene.h"
 
-void ReadScene(int argc, char** argv)
+void ReadScene( int argc, char** argv )
 {
     /*
      * Reads the scene and cameras from arguments
@@ -19,7 +19,8 @@ void ReadScene(int argc, char** argv)
     std::ifstream infile;
     infile.open( argv[2] );
 
-    if ( !infile ) {
+    if ( !infile )
+    {
         std::cout << "Camera can't open." << std::endl;
         return;
     }
@@ -28,7 +29,8 @@ void ReadScene(int argc, char** argv)
 
     infile >> count;
 
-    for ( int i = 0 ; i < count ; i++ ) {
+    for ( int i = 0 ; i < count ; i++ )
+    {
         Camera dummyCamera;
         infile >> dummyString;
         infile >> dummyString;
@@ -36,12 +38,14 @@ void ReadScene(int argc, char** argv)
         infile >> dummyCamera._position;
         infile >> dummyCamera._gaze;
         infile >> dummyCamera._space.Up;
-        infile >> dummyCamera._imagePlane.Left >> dummyCamera._imagePlane.Right >> dummyCamera._imagePlane.Bottom >> dummyCamera._imagePlane.Top >> dummyCamera._imagePlane.Distance >> dummyCamera._imagePlane.Width >> dummyCamera._imagePlane.Height;
+        infile >> dummyCamera._imagePlane.Left >> dummyCamera._imagePlane.Right >> dummyCamera._imagePlane.Bottom
+               >> dummyCamera._imagePlane.Top >> dummyCamera._imagePlane.Distance >> dummyCamera._imagePlane.Width
+               >> dummyCamera._imagePlane.Height;
         infile >> dummyCamera._outputFile;
 
-        dummyCamera._space.Forward._data[0] = - dummyCamera._gaze._data[0];
-        dummyCamera._space.Forward._data[1] = - dummyCamera._gaze._data[1];
-        dummyCamera._space.Forward._data[2] = - dummyCamera._gaze._data[2];
+        dummyCamera._space.Forward._data[0] = -dummyCamera._gaze._data[0];
+        dummyCamera._space.Forward._data[1] = -dummyCamera._gaze._data[1];
+        dummyCamera._space.Forward._data[2] = -dummyCamera._gaze._data[2];
 
         //TODO: u : v x w
         dummyCamera._space.Left = dummyCamera._space.Up.crossProduct( dummyCamera._space.Forward );
@@ -55,7 +59,8 @@ void ReadScene(int argc, char** argv)
     //SCENE
     infile.open( argv[1] );
 
-    if ( !infile ) {
+    if ( !infile )
+    {
         std::cout << "Scene can't open." << std::endl;
         return;
     }
@@ -65,15 +70,17 @@ void ReadScene(int argc, char** argv)
     infile >> scene->_ambientLight;
 
     infile >> count;
-    for ( int i = 0 ; i < count; i++ ) {
+    for ( int i = 0 ; i < count ; i++ )
+    {
         PointLight dummyPointLight;
         infile >> dummyPointLight.position;
         infile >> dummyPointLight.intensity;
-        scene->_lights.push_back(dummyPointLight);
+        scene->_lights.push_back( dummyPointLight );
     }
 
     infile >> count;
-    for ( int i = 0 ; i < count ; i++ ) {
+    for ( int i = 0 ; i < count ; i++ )
+    {
         infile >> dummyString >> dummyString;
 
         Material dummyMaterial;
@@ -82,7 +89,7 @@ void ReadScene(int argc, char** argv)
         infile >> dummyMaterial.specularCoefficient >> dummyMaterial.specExp;
         infile >> dummyMaterial.reflectance;
 
-        scene->_materials.push_back(dummyMaterial);
+        scene->_materials.push_back( dummyMaterial );
     }
 
     infile >> count;
@@ -90,7 +97,8 @@ void ReadScene(int argc, char** argv)
     //#Vertex Data
     infile >> dummyString >> dummyString;
 
-    for ( int i = 0 ; i < count ; i++ ) {
+    for ( int i = 0 ; i < count ; i++ )
+    {
         Vertex dummyVertex;
         infile >> dummyVertex;
 
@@ -98,17 +106,20 @@ void ReadScene(int argc, char** argv)
     }
 
     infile >> count;
-    for ( int i = 0 ; i < count ; i++ ) {
+    for ( int i = 0 ; i < count ; i++ )
+    {
         string dummyString1, dummyString2;
         infile >> dummyString1 >> dummyString2;
 
-        if ( dummyString1.find("Mesh") != string::npos ) {
+        if ( dummyString1.find( "Mesh" ) != string::npos )
+        {
             Mesh dummyMesh;
             infile >> dummyMesh.triangleCount;
             infile >> dummyMesh.materialId;
 
             int vertId;
-            for ( int m = 0 ; m < dummyMesh.triangleCount ; m++ ) {
+            for ( int m = 0 ; m < dummyMesh.triangleCount ; m++ )
+            {
                 Triangle dummyTriangle;
 
                 infile >> vertId;
@@ -120,13 +131,16 @@ void ReadScene(int argc, char** argv)
                 infile >> vertId;
                 dummyTriangle.Vid3 = scene->_vertices[vertId]._position;
 
-                dummyTriangle.normal = (dummyTriangle.Vid2 - dummyTriangle.Vid1).crossProduct( dummyTriangle.Vid3 - dummyTriangle.Vid1 ).normalize();
+                dummyTriangle.normal = ( dummyTriangle.Vid2 - dummyTriangle.Vid1 ).crossProduct(
+                        dummyTriangle.Vid3 - dummyTriangle.Vid1 ).normalize();
 
                 dummyMesh.triangles.push_back( dummyTriangle );
             }
 
             scene->_meshes.push_back( dummyMesh );
-        } else {
+        }
+        else
+        {
             Sphere dummySphere;
 
             infile >> dummySphere.materialId;

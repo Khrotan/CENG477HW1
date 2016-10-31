@@ -2,6 +2,7 @@
 #define MATH_VECTOR3_H
 
 #include <iostream>
+#include "Color.h"
 
 class Vector3
 {
@@ -34,6 +35,8 @@ public:
     Vector3 operator/( float scalar ) const;
 
     Vector3 operator/( double scalar ) const;
+
+    Color operator*( Color c ) const;
 };
 
 #endif //MATH_VECTOR3_H

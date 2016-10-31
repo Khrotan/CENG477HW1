@@ -12,6 +12,6 @@ public:
 
     std::vector<Triangle> triangles;
 
-    bool Intersect( const Ray& ray, RayHitInfo& hitInfo, Triangle& triangle ) const;
+    bool Intersect( const Ray& ray, RayHitInfo& hitInfo ) const;
 };
 #endif //RAYTRACER_MESH_H
