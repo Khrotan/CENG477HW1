@@ -4,7 +4,6 @@
 
 #include <math.h>
 #include "Vector3.h"
-#include "Color.h"
 
 
 double Vector3::dotProduct( const Vector3& rhs ) const

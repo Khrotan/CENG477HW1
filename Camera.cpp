@@ -27,57 +27,58 @@ Image Camera::Render() const
 
             Vector3 d = s - this->_position;
 
-            float t_min_sphere = std::numeric_limits<float>::max();
-            float t_min_mesh = std::numeric_limits<float>::max();
-
-            Sphere closestSphere;
-            Mesh closestMesh;
+            float t_min = std::numeric_limits<float>::max();
 
             Ray ray( this->_position, d );
-            RayHitInfo rayHitInfo;
+            RayHitInfo dummyRayHitInfo;
             RayHitInfo closestRayHitInfo;
 
-            for ( const auto& mesh : CurrentScene->_meshes )
+            for ( int k = 0 ; k < CurrentScene->_meshes.size() ; k++ )
             {
-                for ( const auto& triangle : mesh.triangles )
+                for ( int l = 0 ; l < CurrentScene->_meshes[k].triangles.size() ; l++ )
                 {
-                    if ( triangle.Intersect(ray, rayHitInfo) == true && rayHitInfo.Parameter < t_min_mesh )
+                    Triangle triangle = CurrentScene->_meshes[k].triangles[l];
+                    if ( triangle.Intersect(ray, dummyRayHitInfo) == true && dummyRayHitInfo.Parameter < t_min )
                     {
-                        t_min_mesh = rayHitInfo.Parameter;
-                        closestMesh = mesh;
-                        closestRayHitInfo = rayHitInfo;
+                        t_min = dummyRayHitInfo.Parameter;
+                        closestRayHitInfo = dummyRayHitInfo;
+                        closestRayHitInfo.Material = CurrentScene->_meshes[k].materialId;
+
+                        closestRayHitInfo.meshId = k;
+                        closestRayHitInfo.triangleId = l;
+
+                        closestRayHitInfo.sphereId = -1;
                     }
                 }
             }
 
-            for ( const auto& sphere : CurrentScene->_spheres )
+            for ( int k = 0 ; k < CurrentScene->_spheres.size() ; k++ )
             {
-                if ( sphere.Intersect( ray, rayHitInfo ) == true && rayHitInfo.Parameter < t_min_sphere )
+                Sphere sphere = CurrentScene->_spheres[k];
+
+                if ( sphere.Intersect( ray, dummyRayHitInfo ) == true && dummyRayHitInfo.Parameter < t_min )
                 {
-                    t_min_sphere = rayHitInfo.Parameter;
-                    closestSphere = sphere;
-                    closestRayHitInfo = rayHitInfo;
+                    t_min = dummyRayHitInfo.Parameter;
+                    closestRayHitInfo = dummyRayHitInfo;
+                    closestRayHitInfo.Material = sphere.materialId;
+
+                    closestRayHitInfo.meshId = -1;
+                    closestRayHitInfo.triangleId = -1;
+
+                    closestRayHitInfo.sphereId = k;
                 }
             }
 
-            if ( t_min_sphere == std::numeric_limits<float>::max() &&
-                 t_min_mesh == std::numeric_limits<float>::max() )
+            if ( t_min == std::numeric_limits<float>::max() )
             {
                 continue;
             }
 
 
             //ambient
-            if ( t_min_sphere < t_min_mesh )
-            {
-                outputImg.Pixel( j, i ) = CurrentScene->_ambientLight *
-                                          CurrentScene->_materials[closestSphere.materialId].ambientCoefficient;
-            }
-            else
-            {
-                outputImg.Pixel( j, i ) = CurrentScene->_ambientLight *
-                                          CurrentScene->_materials[closestMesh.materialId].ambientCoefficient;
-            }
+            outputImg.Pixel( j, i ) = CurrentScene->_ambientLight *
+                                      CurrentScene->_materials[closestRayHitInfo.Material].ambientCoefficient;
+
 
             for ( const auto& light : CurrentScene->_lights )
             {
@@ -85,37 +86,42 @@ Image Camera::Render() const
                 Vector3 incomingRadiance;
 
                 //shadow
+                Vector3 w_i = ( light.position - closestRayHitInfo.Position ).normalize();
+
+/*                if ( j == 448 && i == 167 ) {
+                    cout << "asdasd" << endl;
+                }*/
+
                 bool isInShadow = false;
                 RayHitInfo shadowHitInfo;
-                Ray shadowRay( closestRayHitInfo.Position, light.position - closestRayHitInfo.Position );
-                for ( const auto& sphere : CurrentScene->_spheres )
-                {
-/*                    if ( &sphere == &closestSphere ) {
-                        continue;
-                    }*/
+                Ray shadowRay( closestRayHitInfo.Position + ( (light.position - closestRayHitInfo.Position).normalize() )*0.0001f, w_i );
 
-                    if ( sphere.Intersect( shadowRay, shadowHitInfo ) == true )
+                for ( int k = 0 ; k < CurrentScene->_meshes.size() ; k++ )
+                {
+                    for ( int l = 0 ; l < CurrentScene->_meshes[k].triangles.size() ; l++ )
                     {
-                        isInShadow = true;
-                        break;
+                        if ( closestRayHitInfo.meshId == k && closestRayHitInfo.triangleId == l ) {
+                            continue;
+                        }
+                        if ( CurrentScene->_meshes[k].triangles[l].Intersect( shadowRay, shadowHitInfo ) == true )
+                        {
+                            if ( shadowHitInfo.Parameter > 0 && ( light.position - closestRayHitInfo.Position ).getLength() > ( shadowHitInfo.Position - closestRayHitInfo.Position ).getLength() ) {
+                                isInShadow = true;
+                                break;
+                            }
+                        }
                     }
                 }
 
-/*                for ( const auto& mesh : CurrentScene->_meshes )
+                for ( const auto& sphere : CurrentScene->_spheres )
                 {
-                    if ( &sphere == &closestSphere ) {
-                        continue;
-                    }
-
-                    for ( const auto& triangle : mesh.triangles )
+                    if ( sphere.Intersect( shadowRay, shadowHitInfo ) == true )
                     {
-                        if ( triangle.Intersect( shadowRay, shadowHitInfo ) == true )
-                        {
+                        if ( ( light.position - closestRayHitInfo.Position ).getLength() > ( shadowHitInfo.Position - closestRayHitInfo.Position ).getLength() )
                             isInShadow = true;
-                            break;
-                        }
+                        break;
                     }
-                }*/
+                }
 
                 if ( isInShadow == true )
                 {
@@ -123,23 +129,14 @@ Image Camera::Render() const
                 }
 
                 //diffuse
-                Vector3 w_i = ( light.position - closestRayHitInfo.Position ).normalize();
                 float cos_theta_prime = max( 0.0, w_i.dotProduct( closestRayHitInfo.Normal ) );
 
                 incomingRadiance = light.intensity /
                                    ( 4 * M_PI * ( closestRayHitInfo.Position - light.position ).getLength() *
                                      ( closestRayHitInfo.Position - light.position ).getLength() );
 
-                if ( t_min_sphere < t_min_mesh )
-                {
-                    diffuseColor = incomingRadiance * cos_theta_prime *
-                                   CurrentScene->_materials[closestSphere.materialId].diffuseCoefficient;
-                }
-                else
-                {
-                    diffuseColor = incomingRadiance * cos_theta_prime *
-                                   CurrentScene->_materials[closestMesh.materialId].diffuseCoefficient;
-                }
+                diffuseColor = incomingRadiance * cos_theta_prime *
+                               CurrentScene->_materials[closestRayHitInfo.Material].diffuseCoefficient;
 
                 outputImg.Pixel( j, i )._channels[0] += diffuseColor._channels[0];
                 outputImg.Pixel( j, i )._channels[1] += diffuseColor._channels[1];
@@ -149,27 +146,11 @@ Image Camera::Render() const
                 Vector3 half_vector = ( w_i + ( this->_position - closestRayHitInfo.Position ).normalize() ).normalize();
                 float cos_alpha_prime = max( 0.0, half_vector.dotProduct( closestRayHitInfo.Normal ) );
 
-                if ( t_min_sphere < t_min_mesh )
-                {
-                    cos_alpha_prime = pow( cos_alpha_prime,
-                                           CurrentScene->_materials[closestSphere.materialId].specExp );
-                }
-                else
-                {
-                    cos_alpha_prime = pow( cos_alpha_prime,
-                                           CurrentScene->_materials[closestMesh.materialId].specExp );
-                }
+                cos_alpha_prime = pow( cos_alpha_prime,
+                                       CurrentScene->_materials[closestRayHitInfo.Material].specExp );
 
-                if ( t_min_sphere < t_min_mesh )
-                {
-                    billyPhongColor = incomingRadiance * cos_alpha_prime *
-                                      CurrentScene->_materials[closestSphere.materialId].specularCoefficient;
-                }
-                else
-                {
-                    billyPhongColor = incomingRadiance * cos_alpha_prime *
-                                      CurrentScene->_materials[closestMesh.materialId].specularCoefficient;
-                }
+                billyPhongColor = incomingRadiance * cos_alpha_prime *
+                                  CurrentScene->_materials[closestRayHitInfo.Material].specularCoefficient;
 
                 outputImg.Pixel( j, i )._channels[0] += billyPhongColor._channels[0];
                 outputImg.Pixel( j, i )._channels[1] += billyPhongColor._channels[1];

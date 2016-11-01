@@ -6,7 +6,7 @@
 
 bool Triangle::Intersect( const Ray& ray, RayHitInfo& hitInfo ) const
 {
-/*    float a_x_b_x = this->Vid1._data[0] - this->Vid2._data[0];
+    float a_x_b_x = this->Vid1._data[0] - this->Vid2._data[0];
     float a_y_b_y = this->Vid1._data[1] - this->Vid2._data[1];
     float a_z_b_z = this->Vid1._data[2] - this->Vid2._data[2];
 
@@ -46,9 +46,9 @@ bool Triangle::Intersect( const Ray& ray, RayHitInfo& hitInfo ) const
         return true;
     }
 
-    return false;*/
+    return false;
 
-    float varA = this->Vid1._data[0] - this->Vid2._data[0];
+/*    float varA = this->Vid1._data[0] - this->Vid2._data[0];
     float varB = this->Vid1._data[1] - this->Vid2._data[1];
     float varC = this->Vid1._data[2] - this->Vid2._data[2];
     float varD = this->Vid1._data[0] - this->Vid3._data[0];
@@ -89,5 +89,5 @@ bool Triangle::Intersect( const Ray& ray, RayHitInfo& hitInfo ) const
         }
     }
 
-    return false;
+    return false;*/
 }
