@@ -4,6 +4,7 @@
 #include "Vector3.h"
 #include "Image.h"
 #include "Ray.h"
+#include "PointLight.h"
 
 class Camera {
 public:
@@ -30,6 +31,10 @@ public:
      * BEWARE! You should render each camera by using this function, we will grade it according to regulations!
      */
     Image Render() const;
+
+    Color shade( PointLight light, RayHitInfo closestRayHitInfo, Ray ray, int recursionDepth ) const;
+
+    bool findIntersection( int i, int j, RayHitInfo& closestRayHitInfo, Ray& ray )const;
 
     const std::string& OutputFile() const
     {

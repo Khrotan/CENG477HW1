@@ -32,6 +32,13 @@ public:
                      this->_channels[2] * c._channels[2]);
     }
 
+    Color operator+(Color c) const
+    {
+        return Color(this->_channels[0] + c._channels[0],
+                     this->_channels[1] + c._channels[1],
+                     this->_channels[2] + c._channels[2]);
+    }
+
     Color operator*(float c) const
     {
         return Color(_channels[0] * c,
@@ -45,6 +52,8 @@ public:
     }
 
     friend std::istream& operator>>(std::istream& stream, Color& color);
+
+    bool isShiny();
 };
 
 
@@ -54,13 +63,18 @@ inline Color::Color()
 }
 
 inline Color::Color(float r, float g, float b) {
-    _channels[0] = r;
-    _channels[1] = g;
-    _channels[2] = b;
+    _channels[0] = std::max(0.0f, std::min(255.0f, r));
+    _channels[1] = std::max(0.0f, std::min(255.0f, g));
+    _channels[2] = std::max(0.0f, std::min(255.0f, b));
 }
 
 inline std::istream &operator>>(std::istream &stream, Color &color) {
     return stream >> color._channels[0] >> color._channels[1] >> color._channels[2];
+}
+
+inline bool Color::isShiny()
+{
+    return (this->_channels[0] != 0 && this->_channels[1] != 0 && this->_channels[2] != 0);
 }
 
 
