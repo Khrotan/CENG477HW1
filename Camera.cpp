@@ -38,7 +38,7 @@ Image Camera::Render() const
                 for ( int l = 0 ; l < CurrentScene->_meshes[k].triangles.size() ; l++ )
                 {
                     Triangle triangle = CurrentScene->_meshes[k].triangles[l];
-                    if ( triangle.Intersect(ray, dummyRayHitInfo) == true && dummyRayHitInfo.Parameter < t_min )
+                    if ( triangle.Intersect(ray, dummyRayHitInfo) == true && dummyRayHitInfo.Parameter < t_min && 0.000000f < dummyRayHitInfo.Parameter )
                     {
                         t_min = dummyRayHitInfo.Parameter;
                         closestRayHitInfo = dummyRayHitInfo;
@@ -56,7 +56,7 @@ Image Camera::Render() const
             {
                 Sphere sphere = CurrentScene->_spheres[k];
 
-                if ( sphere.Intersect( ray, dummyRayHitInfo ) == true && dummyRayHitInfo.Parameter < t_min )
+                if ( sphere.Intersect( ray, dummyRayHitInfo ) == true && dummyRayHitInfo.Parameter < t_min && 0.000000f < dummyRayHitInfo.Parameter )
                 {
                     t_min = dummyRayHitInfo.Parameter;
                     closestRayHitInfo = dummyRayHitInfo;
@@ -87,10 +87,6 @@ Image Camera::Render() const
 
                 //shadow
                 Vector3 w_i = ( light.position - closestRayHitInfo.Position ).normalize();
-
-/*                if ( j == 448 && i == 167 ) {
-                    cout << "asdasd" << endl;
-                }*/
 
                 bool isInShadow = false;
                 RayHitInfo shadowHitInfo;
