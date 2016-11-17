@@ -10,6 +10,10 @@
 #include "Color.h"
 #include "PointLight.h"
 #include "Vertex.h"
+#include "Texture.h"
+#include "Translation.h"
+#include "Scaling.h"
+#include "Rotation.h"
 
 using namespace std;
 
@@ -22,6 +26,12 @@ public:
     std::vector<Mesh>   _meshes;
 
     std::vector<Material> _materials;
+
+    std::vector<Texture> _textures;
+
+    std::vector<Translation> _translations;
+    std::vector<Scaling> _scalings;
+    std::vector<Rotation> _rotations;
 
     std::vector<PointLight> _lights;
 

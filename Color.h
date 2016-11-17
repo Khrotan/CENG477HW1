@@ -5,22 +5,22 @@
 
 class Color {
 public:
-    float _channels[3];
+    double _channels[3];
 
     Color();
-    Color(float r, float g, float b);
+    Color(double r, double g, double b);
 
-    float R() const
+    double R() const
     {
         return _channels[0];
     }
 
-    float G() const
+    double G() const
     {
         return _channels[1];
     }
 
-    float B() const
+    double B() const
     {
         return _channels[2];
     }
@@ -39,14 +39,14 @@ public:
                      this->_channels[2] + c._channels[2]);
     }
 
-    Color operator*(float c) const
+    Color operator*(double c) const
     {
         return Color(_channels[0] * c,
                      _channels[1] * c,
                      _channels[2] * c);
     }
 
-    Color operator/(float denom) const
+    Color operator/(double denom) const
     {
         return (*this) * (1 / denom);
     }
@@ -62,10 +62,10 @@ inline Color::Color()
     _channels[0] = _channels[1] = _channels[2] = 0;
 }
 
-inline Color::Color(float r, float g, float b) {
-    _channels[0] = std::max(0.0f, std::min(255.0f, r));
-    _channels[1] = std::max(0.0f, std::min(255.0f, g));
-    _channels[2] = std::max(0.0f, std::min(255.0f, b));
+inline Color::Color(double r, double g, double b) {
+    _channels[0] = std::max(0.0, std::min(255.0, r));
+    _channels[1] = std::max(0.0, std::min(255.0, g));
+    _channels[2] = std::max(0.0, std::min(255.0, b));
 }
 
 inline std::istream &operator>>(std::istream &stream, Color &color) {

@@ -7,7 +7,11 @@
 class Vector3
 {
 public:
-    float _data[3];
+    double _data[3];
+
+    Vector3();
+
+    Vector3(double x, double y, double z);
 
     friend std::istream &operator>>(std::istream &stream, Vector3 &vertex)
     {
@@ -28,11 +32,7 @@ public:
 
     Vector3 operator*( int scalar ) const;
 
-    Vector3 operator*( float scalar ) const;
-
     Vector3 operator*( double scalar ) const;
-
-    Vector3 operator/( float scalar ) const;
 
     Vector3 operator/( double scalar ) const;
 

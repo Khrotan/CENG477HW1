@@ -4,6 +4,7 @@
 
 #include "Scene.h"
 
+
 void ReadScene( int argc, char** argv )
 {
     /*
@@ -15,6 +16,9 @@ void ReadScene( int argc, char** argv )
     // dummy objects to ease indexing
     scene->_vertices.push_back( Vertex() );
     scene->_materials.push_back( Material() );
+    scene->_translations.push_back( Translation() );
+    scene->_scalings.push_back( Scaling() );
+    scene->_rotations.push_back( Rotation() );
 
     std::ifstream infile;
     infile.open( argv[2] );
@@ -92,9 +96,109 @@ void ReadScene( int argc, char** argv )
         scene->_materials.push_back( dummyMaterial );
     }
 
+    //#Textures
+    infile >> dummyString;
+
+    //texture
     infile >> count;
 
-    //#Vertex Data
+    for ( int i = 0 ; i < count ; i++ )
+    {
+        Texture dummyTexture;
+        infile >> dummyTexture.fileName;
+    }
+
+    //#Translation
+    infile >> dummyString;
+
+    //translation
+    infile >> count;
+
+    for ( int i = 0 ; i < count ; ++i )
+    {
+        Translation dummyTranslation;
+        infile >> dummyTranslation.t_x >> dummyTranslation.t_y >> dummyTranslation.t_z;
+
+        scene->_translations.push_back( dummyTranslation );
+    }
+
+    //#Scaling
+    infile >> dummyString;
+
+    //scaling
+    infile >> count;
+
+    for ( int i = 0 ; i < count ; ++i )
+    {
+        Scaling dummyScaling;
+        infile >> dummyScaling.s_x >> dummyScaling.s_y >> dummyScaling.s_z;
+
+        scene->_scalings.push_back( dummyScaling );
+    }
+
+    //#Rotation
+    infile >> dummyString;
+
+    //rotation
+    infile >> count;
+
+    for ( int i = 0 ; i < count ; ++i )
+    {
+        Rotation dummyRotation;
+        infile >> dummyRotation.alpha >> dummyRotation.u_x >> dummyRotation.u_y >> dummyRotation.u_z;
+
+        scene->_rotations.push_back( dummyRotation );
+    }
+
+    //instance
+    infile >> count;
+
+    int transformationCount;
+
+    for ( int i = 0 ; i < count ; ++i )
+    {
+        infile >> dummyString;
+
+        if ( dummyString == "#SphereInstance" )
+        {
+            Sphere dummySphere;
+
+            infile >> dummySphere.materialId;
+            infile >> dummySphere.textureId;
+
+            infile >> transformationCount;
+
+            for ( int j = 0 ; j < count ; ++j )
+            {
+                int translationIndex;
+                infile >> dummyString >> translationIndex;
+
+                if ( dummyString == "s" ) {
+                    Scaling dummyScaling;
+                    infile >> dummyScaling.s_x >> dummyScaling.s_y >> dummyScaling.s_z;
+
+                    scene->_scalings.push_back( dummyScaling );
+                } else if ( dummyString == "r" ) {
+                    Rotation dummyRotation;
+                    infile >> dummyRotation.alpha >> dummyRotation.u_x >> dummyRotation.u_y >> dummyRotation.u_z;
+
+                    scene->_rotations.push_back( dummyRotation );
+                } else {
+                    Translation dummyTranslation;
+                    infile >> dummyTranslation.t_x >> dummyTranslation.t_y >> dummyTranslation.t_z;
+
+                    scene->_translations.push_back( dummyTranslation );
+                }
+            }
+
+            scene->_spheres.push_back( dummySphere );
+        }
+        else {
+
+        }
+    }
+
+/*    //#Vertex Data
     infile >> dummyString >> dummyString;
 
     for ( int i = 0 ; i < count ; i++ )
@@ -152,7 +256,7 @@ void ReadScene( int argc, char** argv )
 
             scene->_spheres.push_back( dummySphere );
         }
-    }
+    }*/
     CurrentScene = scene;
 }
 

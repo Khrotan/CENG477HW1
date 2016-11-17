@@ -29,11 +29,11 @@ set(SOURCE_FILES
     Sphere.h
     Triangle.h
     Vector3.h
-    Vertex.h Camera.cpp Sphere.cpp Scene.cpp Vector3.cpp Triangle.cpp Mesh.cpp)
+    Vertex.h Camera.cpp Sphere.cpp Scene.cpp Vector3.cpp Triangle.cpp Mesh.cpp Texture.h Texture.cpp Translation.cpp Translation.h Scaling.cpp Scaling.h Rotation.cpp Rotation.h Cube.cpp Cube.h)
 
 include_directories(.)
 include_directories(cameras)
 include_directories(images)
 include_directories(scenes)
 
-add_executable(Edit ${SOURCE_FILES})
+add_executable(Edit ${SOURCE_FILES} Texture.h Texture.cpp Translation.cpp Translation.h Scaling.cpp Scaling.h Rotation.cpp Rotation.h Cube.cpp Cube.h)

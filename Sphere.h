@@ -9,7 +9,8 @@ class Sphere
 
 public:
     int materialId;
-    double radius;
+    int textureId;
+    double radius = 1;
     Vector3 center;
 
     // This function gets a ray, and if the sphere intersects with the ray, returns true and fills the hitInfo struct

@@ -51,16 +51,6 @@ Vector3 Vector3::operator*( int scalar ) const
     return returnVector;
 }
 
-Vector3 Vector3::operator*( float scalar ) const
-{
-    Vector3 returnVector;
-    returnVector._data[0] = this->_data[0] * scalar;
-    returnVector._data[1] = this->_data[1] * scalar;
-    returnVector._data[2] = this->_data[2] * scalar;
-
-    return returnVector;
-}
-
 Vector3 Vector3::operator*( double scalar ) const
 {
     Vector3 returnVector;
@@ -81,16 +71,6 @@ Color Vector3::operator*( Color c ) const
     return returnColor;
 }
 
-
-Vector3 Vector3::operator/( float scalar ) const
-{
-    Vector3 returnVector;
-    returnVector._data[0] = this->_data[0] / scalar;
-    returnVector._data[1] = this->_data[1] / scalar;
-    returnVector._data[2] = this->_data[2] / scalar;
-
-    return returnVector;
-}
 
 Vector3 Vector3::operator/( double scalar ) const
 {
@@ -115,4 +95,18 @@ Vector3 Vector3::normalize()
 double Vector3::getLength()
 {
     return sqrt( this->_data[0] * this->_data[0] + this->_data[1] * this->_data[1] + this->_data[2] * this->_data[2] );
+}
+
+Vector3::Vector3()
+{
+    this->_data[0] = 0.0;
+    this->_data[1] = 0.0;
+    this->_data[2] = 0.0;
+}
+
+Vector3::Vector3( double x, double y, double z )
+{
+    this->_data[0] = x;
+    this->_data[1] = y;
+    this->_data[2] = z;
 }

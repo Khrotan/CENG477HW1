@@ -14,8 +14,8 @@ public:
     } _space;
 
     struct {
-        float Left, Right, Bottom, Top;
-        float Distance;
+        double Left, Right, Bottom, Top;
+        double Distance;
 
         int Width;
         int Height;
@@ -34,7 +34,7 @@ public:
 
     Color shade( PointLight light, RayHitInfo closestRayHitInfo, Ray ray, int recursionDepth ) const;
 
-    bool findIntersection( int i, int j, RayHitInfo& closestRayHitInfo, Ray& ray )const;
+    bool fillHitInfo( RayHitInfo& closestRayHitInfo, Ray ray ) const;
 
     const std::string& OutputFile() const
     {

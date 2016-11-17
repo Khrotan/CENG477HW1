@@ -8,7 +8,7 @@
 
 bool Mesh::Intersect( const Ray& ray, RayHitInfo& hitInfo ) const
 {
-    float t_min_triangle = std::numeric_limits<float>::max();
+    double t_min_triangle = std::numeric_limits<double>::max();
 
     for ( const auto& triangle : this->triangles ) {
         if ( triangle.Intersect( ray, hitInfo ) == true ) {
@@ -18,7 +18,7 @@ bool Mesh::Intersect( const Ray& ray, RayHitInfo& hitInfo ) const
         }
     }
 
-    if ( t_min_triangle < std::numeric_limits<float>::max() ) {
+    if ( t_min_triangle < std::numeric_limits<double>::max() ) {
         return true;
     }
     return false;
