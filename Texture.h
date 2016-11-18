@@ -6,10 +6,16 @@
 #define EDIT_TEXTURE_H
 
 #include <string>
+extern "C" {
+#include "jpeg_reader/aoa_jpeg.h"
+}
 
 class Texture {
 public:
     std::string fileName;
+    int height;
+    int width;
+    UCOLOR** image;
 };
 
 #endif //EDIT_TEXTURE_H

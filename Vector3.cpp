@@ -110,3 +110,18 @@ Vector3::Vector3( double x, double y, double z )
     this->_data[1] = y;
     this->_data[2] = z;
 }
+
+double Vector3::getX()
+{
+    return this->_data[0];
+}
+
+double Vector3::getY()
+{
+    return this->_data[1];
+}
+
+double Vector3::getZ()
+{
+    return this->_data[2];
+}

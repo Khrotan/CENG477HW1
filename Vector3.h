@@ -37,6 +37,10 @@ public:
     Vector3 operator/( double scalar ) const;
 
     Color operator*( Color c ) const;
+
+    double getX();
+    double getY();
+    double getZ();
 };
 
 #endif //MATH_VECTOR3_H

@@ -4,7 +4,6 @@
 
 #include <limits>
 #include "Camera.h"
-#include "Sphere.h"
 #include "Mesh.h"
 #include "Scene.h"
 
@@ -144,8 +143,18 @@ Color Camera::shade( PointLight light, RayHitInfo closestRayHitInfo, Ray ray, in
     }
     else
     {
-        diffuseColor = incomingRadiance * cos_theta_prime *
-                       CurrentScene->_materials[closestRayHitInfo.Material].diffuseCoefficient;
+        Color jpgColor;
+        jpgColor._channels[0] = (
+                (double) CurrentScene->_textures[closestRayHitInfo.textureId].image[closestRayHitInfo.i][closestRayHitInfo.j][0] /
+                255.0 );
+        jpgColor._channels[1] = (
+                (double) CurrentScene->_textures[closestRayHitInfo.textureId].image[closestRayHitInfo.i][closestRayHitInfo.j][1] /
+                255.0 );
+        jpgColor._channels[2] = (
+                (double) CurrentScene->_textures[closestRayHitInfo.textureId].image[closestRayHitInfo.i][closestRayHitInfo.j][2] /
+                255.0 );
+
+        diffuseColor = incomingRadiance * cos_theta_prime * jpgColor;
     }
 
     //billy phong
@@ -227,6 +236,8 @@ bool Camera::fillHitInfo( RayHitInfo& closestRayHitInfo, Ray ray ) const
 
             closestRayHitInfo.sphereId = k;
             closestRayHitInfo.textureId = CurrentScene->_spheres[k].textureId;
+
+            findI_J( closestRayHitInfo, sphere );
         }
     }
 
@@ -238,4 +249,56 @@ bool Camera::fillHitInfo( RayHitInfo& closestRayHitInfo, Ray ray ) const
     {
         return true;
     }
+}
+
+void Camera::findI_J( RayHitInfo& info, Sphere sphere ) const
+{
+    double theta, fi, u, v;
+    Vector3 temp;
+    temp = info.Position;
+
+/*    for ( int j = sphere.transforms.size() - 1 ; j > -1 ; j-- )
+    {
+        if ( sphere.transforms[j] == 't' )
+        {
+            temp = translateBonus( &temp, translations[sphere.transformIDs[j] - 1], -1 );
+        }
+        else if ( sphere.transforms[j] == 'r' )
+        {
+            temp = rotationBonus( &temp, rotations[sphere.transformIDs[j] - 1] );
+        }
+    }
+    for ( int j = 0 ; j < sphere.transforms.size() ; j++ )
+    {
+        if ( sphere.transforms[j] == 't' )
+        {
+            temp = translateBonus( &temp, translations[sphere.transformIDs[j] - 1], 1 );
+        }
+    }*/
+
+    theta = acos( ( temp.getY() - sphere.center.getY() ) / sphere.radius );
+    fi = -( atan2( ( temp.getZ() - sphere.center.getZ() ), ( temp.getX() - sphere.center.getX() ) ) );
+
+    fi += M_PI;
+
+    if ( fi < 0 )
+    {
+        fi = ( 2 * M_PI ) + fi;
+    }
+
+    if ( theta < 0 )
+    { theta += M_PI; }
+
+    u = fi / ( 2 * M_PI );
+    v = ( theta ) / M_PI;
+
+    info.j = round( u * ( CurrentScene->_textures[sphere.textureId].width ) );
+    info.i = round( v * ( CurrentScene->_textures[sphere.textureId - 1].height ) );
+
+    if ( info.i == ( CurrentScene->_textures[sphere.textureId].height ) )
+    { info.i--; }
+    if ( info.j == ( CurrentScene->_textures[sphere.textureId].width ) )
+    { info.j--; }
+
+    info.textureId = sphere.textureId;
 }

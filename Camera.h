@@ -6,6 +6,7 @@
 #include "Ray.h"
 #include "PointLight.h"
 #include "Rotation.h"
+#include "Sphere.h"
 
 class Camera {
 public:
@@ -36,6 +37,8 @@ public:
     Color shade( PointLight light, RayHitInfo closestRayHitInfo, Ray ray, int recursionDepth ) const;
 
     bool fillHitInfo( RayHitInfo& closestRayHitInfo, Ray ray ) const;
+
+    void findI_J(RayHitInfo& info, Sphere sphere) const;
 
     const std::string& OutputFile() const
     {
