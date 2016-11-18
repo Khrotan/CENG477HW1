@@ -48,3 +48,17 @@ bool Triangle::Intersect( const Ray& ray, RayHitInfo& hitInfo ) const
 
     return false;
 }
+
+Triangle::Triangle( const Vector3& Vid1, const Vector3& Vid2, const Vector3& Vid3 ) : Vid1( Vid1 ), Vid2( Vid2 ),
+                                                                                      Vid3( Vid3 ),
+                                                                                      normal( ( this->Vid2 -
+                                                                                                this->Vid1 ).crossProduct(
+                                                                                              this->Vid3 -
+                                                                                              this->Vid1 ).normalize() )
+{
+}
+
+void Triangle::computeNormal()
+{
+    this->normal = ( this->Vid2 - this->Vid1 ).crossProduct( this->Vid3 - this->Vid1 ).normalize();
+}

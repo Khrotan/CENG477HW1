@@ -5,6 +5,7 @@
 #include "Image.h"
 #include "Ray.h"
 #include "PointLight.h"
+#include "Rotation.h"
 
 class Camera {
 public:

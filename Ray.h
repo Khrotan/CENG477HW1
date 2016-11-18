@@ -34,7 +34,7 @@ struct RayHitInfo
     Vector3     Position;
     Vector3     Normal;
 
-    int meshId, triangleId, sphereId;
+    int meshId, triangleId, sphereId, textureId;
 
     double       Parameter;
 };

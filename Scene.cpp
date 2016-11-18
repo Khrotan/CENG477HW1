@@ -3,7 +3,9 @@
 //
 
 #include "Scene.h"
+#include "Cube.h"
 
+#define M_PI 3.14159265358979323846
 
 void ReadScene( int argc, char** argv )
 {
@@ -106,6 +108,7 @@ void ReadScene( int argc, char** argv )
     {
         Texture dummyTexture;
         infile >> dummyTexture.fileName;
+        scene->_textures.push_back( dummyTexture );
     }
 
     //#Translation
@@ -145,7 +148,10 @@ void ReadScene( int argc, char** argv )
     for ( int i = 0 ; i < count ; ++i )
     {
         Rotation dummyRotation;
-        infile >> dummyRotation.alpha >> dummyRotation.u_x >> dummyRotation.u_y >> dummyRotation.u_z;
+        infile >> dummyRotation.alpha >> dummyRotation.point._data[0] >> dummyRotation.point._data[1]
+               >> dummyRotation.point._data[2];
+
+        dummyRotation.point.normalize();
 
         scene->_rotations.push_back( dummyRotation );
     }
@@ -168,96 +174,153 @@ void ReadScene( int argc, char** argv )
 
             infile >> transformationCount;
 
-            for ( int j = 0 ; j < count ; ++j )
+            for ( int j = 0 ; j < transformationCount ; ++j )
             {
-                int translationIndex;
-                infile >> dummyString >> translationIndex;
+                int transformationIndex;
+                infile >> dummyString >> transformationIndex;
 
-                if ( dummyString == "s" ) {
-                    Scaling dummyScaling;
-                    infile >> dummyScaling.s_x >> dummyScaling.s_y >> dummyScaling.s_z;
-
-                    scene->_scalings.push_back( dummyScaling );
-                } else if ( dummyString == "r" ) {
-                    Rotation dummyRotation;
-                    infile >> dummyRotation.alpha >> dummyRotation.u_x >> dummyRotation.u_y >> dummyRotation.u_z;
-
-                    scene->_rotations.push_back( dummyRotation );
-                } else {
-                    Translation dummyTranslation;
-                    infile >> dummyTranslation.t_x >> dummyTranslation.t_y >> dummyTranslation.t_z;
-
-                    scene->_translations.push_back( dummyTranslation );
+                if ( dummyString == "s" )
+                {
+                    dummySphere.scalings.push_back( scene->_scalings[transformationIndex] );
+                }
+                else if ( dummyString == "r" )
+                {
+                    dummySphere.rotations.push_back( scene->_rotations[transformationIndex] );
+                }
+                else
+                {
+                    dummySphere.translations.push_back( scene->_translations[transformationIndex] );
                 }
             }
 
             scene->_spheres.push_back( dummySphere );
         }
-        else {
-
-        }
-    }
-
-/*    //#Vertex Data
-    infile >> dummyString >> dummyString;
-
-    for ( int i = 0 ; i < count ; i++ )
-    {
-        Vertex dummyVertex;
-        infile >> dummyVertex;
-
-        scene->_vertices.push_back( dummyVertex );
-    }
-
-    infile >> count;
-    for ( int i = 0 ; i < count ; i++ )
-    {
-        string dummyString1, dummyString2;
-        infile >> dummyString1 >> dummyString2;
-
-        if ( dummyString1.find( "Mesh" ) != string::npos )
-        {
-            Mesh dummyMesh;
-            infile >> dummyMesh.triangleCount;
-            infile >> dummyMesh.materialId;
-
-            int vertId;
-            for ( int m = 0 ; m < dummyMesh.triangleCount ; m++ )
-            {
-                Triangle dummyTriangle;
-
-                infile >> vertId;
-                dummyTriangle.Vid1 = scene->_vertices[vertId]._position;
-
-                infile >> vertId;
-                dummyTriangle.Vid2 = scene->_vertices[vertId]._position;
-
-                infile >> vertId;
-                dummyTriangle.Vid3 = scene->_vertices[vertId]._position;
-
-                dummyTriangle.normal = ( dummyTriangle.Vid2 - dummyTriangle.Vid1 ).crossProduct(
-                        dummyTriangle.Vid3 - dummyTriangle.Vid1 ).normalize();
-
-                dummyMesh.triangles.push_back( dummyTriangle );
-            }
-
-            scene->_meshes.push_back( dummyMesh );
-        }
         else
         {
-            Sphere dummySphere;
+            Cube dummyCube;
 
-            infile >> dummySphere.materialId;
-            infile >> dummySphere.radius;
+            infile >> dummyCube.materialId;
+            infile >> dummyCube.textureId;
 
-            int vertId;
-            infile >> vertId;
-            dummySphere.center = scene->_vertices[vertId]._position;
+            infile >> transformationCount;
 
-            scene->_spheres.push_back( dummySphere );
+            for ( int j = 0 ; j < transformationCount ; ++j )
+            {
+                int transformationIndex;
+                infile >> dummyString >> transformationIndex;
+
+                if ( dummyString == "s" )
+                {
+                    dummyCube.scalings.push_back( scene->_scalings[transformationIndex] );
+                }
+                else if ( dummyString == "r" )
+                {
+                    dummyCube.rotations.push_back( scene->_rotations[transformationIndex] );
+                }
+                else
+                {
+                    dummyCube.translations.push_back( scene->_translations[transformationIndex] );
+                }
+            }
+
+            scene->_cubes.push_back( dummyCube );
         }
-    }*/
+    }
+
     CurrentScene = scene;
+
+    CurrentScene->applyTransformations();
+
+    cout << "arda" << endl;
 }
 
 Scene* CurrentScene;
+
+void Scene::rotatePoint( Vector3& point, Rotation rotation )
+{
+    rotation.point.normalize();
+
+    double a, b, c, d, x, y, z;
+    a = rotation.point._data[0];
+    b = rotation.point._data[1];
+    c = rotation.point._data[2];
+    d = sqrt( ( b * b ) + ( c * c ) );
+
+    if ( d != 0 )
+    {
+        y = ( ( point._data[1] * c ) / d ) - ( ( point._data[2] * b ) / d );
+        z = ( ( point._data[1] * b ) / d ) + ( ( point._data[2] * c ) / d );
+        point._data[1] = y;
+        point._data[2] = z;
+    }
+
+    x = ( point._data[0] * d ) - ( point._data[2] * a );
+    z = ( point._data[0] * a ) + ( point._data[2] * d );
+    point._data[0] = x;
+    point._data[2] = z;
+    x = ( point._data[0] * cos( ( rotation.alpha * M_PI ) / 180.0 ) ) -
+        ( point._data[1] * sin( ( rotation.alpha * M_PI ) / 180.0 ) );
+    y = ( point._data[0] * sin( ( rotation.alpha * M_PI ) / 180.0 ) ) +
+        ( point._data[1] * cos( ( rotation.alpha * M_PI ) / 180.0 ) );
+    point._data[0] = x;
+    point._data[1] = y;
+
+    x = ( point._data[0] * d ) + ( point._data[2] * a );
+    z = ( point._data[2] * d ) - ( point._data[0] * a );
+    point._data[0] = x;
+    point._data[2] = z;
+
+    if ( d != 0 )
+    {
+        y = ( ( point._data[1] * c ) / d ) + ( ( point._data[2] * b ) / d );
+        z = ( ( point._data[2] * c ) / d ) - ( ( point._data[1] * b ) / d );
+        point._data[1] = y;
+        point._data[2] = z;
+    }
+}
+
+
+void Scene::applyTransformations()
+{
+    for ( auto& cube : this->_cubes )
+    {
+        for ( auto& scaling : cube.scalings )
+        {
+            cube.applyScaling( scaling );
+        }
+
+        for ( auto& translation : cube.translations )
+        {
+            cube.applyTranslation( translation );
+        }
+
+        for ( auto& rotation : cube.rotations )
+        {
+            for ( auto& triangle : cube.triangles )
+            {
+                this->rotatePoint( triangle.Vid1, rotation );
+                this->rotatePoint( triangle.Vid2, rotation );
+                this->rotatePoint( triangle.Vid3, rotation );
+                triangle.computeNormal();
+            }
+        }
+    }
+
+    for ( auto& sphere : this->_spheres )
+    {
+        for ( auto& scaling : sphere.scalings )
+        {
+            sphere.applyScaling( scaling );
+        }
+
+        for ( auto& translation : sphere.translations )
+        {
+            sphere.applyTranlation( translation );
+        }
+
+        for ( auto& rotation : sphere.rotations )
+        {
+            ;
+        }
+    }
+}

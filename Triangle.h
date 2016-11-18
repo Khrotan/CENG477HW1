@@ -12,7 +12,9 @@ public:
 
     Vector3 normal;
 
-    Triangle(Vector3 vid1, Vector3 vid2, Vector3 vid3);
+    Triangle( const Vector3& Vid1, const Vector3& Vid2, const Vector3& Vid3 );
+
+    void computeNormal();
 
     // This function gets a ray, and if the triangle intersects with the ray, returns true and fills the hitInfo struct
     // Else return false and leave hitInfo unchanged

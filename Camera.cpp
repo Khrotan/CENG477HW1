@@ -95,15 +95,11 @@ Color Camera::shade( PointLight light, RayHitInfo closestRayHitInfo, Ray ray, in
             closestRayHitInfo.Position + ( ( light.position - closestRayHitInfo.Position ).normalize() ) * 0.001,
             w_i );
 
-    for ( int k = 0 ; k < CurrentScene->_meshes.size() ; k++ )
+    for ( int k = 0 ; k < CurrentScene->_cubes.size() ; k++ )
     {
-        for ( int l = 0 ; l < CurrentScene->_meshes[k].triangles.size() ; l++ )
+        for ( int l = 0 ; l < CurrentScene->_cubes[k].triangles.size() ; l++ )
         {
-            if ( closestRayHitInfo.meshId == k && closestRayHitInfo.triangleId == l )
-            {
-                continue;
-            }
-            if ( CurrentScene->_meshes[k].triangles[l].Intersect( shadowRay, shadowHitInfo ) == true )
+            if ( CurrentScene->_cubes[k].triangles[l].Intersect( shadowRay, shadowHitInfo ) == true )
             {
                 if ( shadowHitInfo.Parameter > 0 && ( light.position - closestRayHitInfo.Position ).getLength() >
                                                     ( shadowHitInfo.Position -
@@ -141,8 +137,16 @@ Color Camera::shade( PointLight light, RayHitInfo closestRayHitInfo, Ray ray, in
                        ( 4 * M_PI * ( closestRayHitInfo.Position - light.position ).getLength() *
                          ( closestRayHitInfo.Position - light.position ).getLength() );
 
-    diffuseColor = incomingRadiance * cos_theta_prime *
-                   CurrentScene->_materials[closestRayHitInfo.Material].diffuseCoefficient;
+    if ( closestRayHitInfo.textureId == 0 )
+    {
+        diffuseColor = incomingRadiance * cos_theta_prime *
+                       CurrentScene->_materials[closestRayHitInfo.Material].diffuseCoefficient;
+    }
+    else
+    {
+        diffuseColor = incomingRadiance * cos_theta_prime *
+                       CurrentScene->_materials[closestRayHitInfo.Material].diffuseCoefficient;
+    }
 
     //billy phong
     Vector3 half_vector = ( w_i + ( this->_position - closestRayHitInfo.Position ).normalize() ).normalize();
@@ -186,22 +190,23 @@ bool Camera::fillHitInfo( RayHitInfo& closestRayHitInfo, Ray ray ) const
 
     RayHitInfo dummyRayHitInfo;
 
-    for ( int k = 0 ; k < CurrentScene->_meshes.size() ; k++ )
+    for ( int k = 0 ; k < CurrentScene->_cubes.size() ; k++ )
     {
-        for ( int l = 0 ; l < CurrentScene->_meshes[k].triangles.size() ; l++ )
+        for ( int l = 0 ; l < CurrentScene->_cubes[k].triangles.size() ; l++ )
         {
-            Triangle triangle = CurrentScene->_meshes[k].triangles[l];
+            Triangle triangle = CurrentScene->_cubes[k].triangles[l];
             if ( triangle.Intersect( ray, dummyRayHitInfo ) == true && dummyRayHitInfo.Parameter < t_min &&
                  0.0001 < dummyRayHitInfo.Parameter )
             {
                 t_min = dummyRayHitInfo.Parameter;
                 closestRayHitInfo = dummyRayHitInfo;
-                closestRayHitInfo.Material = CurrentScene->_meshes[k].materialId;
+                closestRayHitInfo.Material = CurrentScene->_cubes[k].materialId;
 
                 closestRayHitInfo.meshId = k;
                 closestRayHitInfo.triangleId = l;
 
                 closestRayHitInfo.sphereId = -1;
+                closestRayHitInfo.textureId = CurrentScene->_cubes[k].textureId;
             }
         }
     }
@@ -221,6 +226,7 @@ bool Camera::fillHitInfo( RayHitInfo& closestRayHitInfo, Ray ray ) const
             closestRayHitInfo.triangleId = -1;
 
             closestRayHitInfo.sphereId = k;
+            closestRayHitInfo.textureId = CurrentScene->_spheres[k].textureId;
         }
     }
 

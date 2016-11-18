@@ -6,13 +6,13 @@
 #define EDIT_ROTATION_H
 
 
+#include "Vector3.h"
+
 class Rotation
 {
 public:
     double alpha;
-    double u_x;
-    double u_y;
-    double u_z;
+    Vector3 point;
 };
 
 

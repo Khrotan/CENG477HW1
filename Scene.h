@@ -14,6 +14,7 @@
 #include "Translation.h"
 #include "Scaling.h"
 #include "Rotation.h"
+#include "Cube.h"
 
 using namespace std;
 
@@ -24,6 +25,7 @@ public:
     std::vector<Camera> _cameras;
     std::vector<Sphere> _spheres;
     std::vector<Mesh>   _meshes;
+    std::vector<Cube> _cubes;
 
     std::vector<Material> _materials;
 
@@ -42,6 +44,10 @@ public:
     const std::vector<Camera>& Cameras() const {
         return _cameras;
     }
+
+    void applyTransformations();
+
+    void rotatePoint( Vector3& point, Rotation rotation );
 
     //////////////////////////////
     // READ SCENE FUNCTIONS HERE !

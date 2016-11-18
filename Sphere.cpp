@@ -49,3 +49,21 @@ bool Sphere::Intersect( const Ray& ray, RayHitInfo& hitInfo ) const
 
     return false;
 }
+
+Sphere::Sphere() : radius( 1 ),
+                   center( Vector3( 0, 0, 0 ) )
+{
+
+}
+
+void Sphere::applyScaling( Scaling scaling )
+{
+    this->radius *= scaling.s_x;
+}
+
+void Sphere::applyTranlation( Translation translation )
+{
+    this->center._data[0] += translation.t_x;
+    this->center._data[1] += translation.t_y;
+    this->center._data[2] += translation.t_z;
+}
