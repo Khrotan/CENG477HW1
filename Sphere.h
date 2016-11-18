@@ -1,8 +1,8 @@
 #ifndef RAYTRACER_SPHERE_H
 #define RAYTRACER_SPHERE_H
 
-#include <Math.h>
-#include <Vector>
+#include <math.h>
+#include <vector>
 #include "Ray.h"
 #include "Translation.h"
 #include "Rotation.h"

@@ -1,9 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <Scene.h>
-#include <Eigen/Dense>
-
-using namespace Eigen;
+#include "Scene.h"
 
 int main(int argc, char** argv)
 {
@@ -12,11 +9,6 @@ int main(int argc, char** argv)
         std::cerr << "Please provide scene and camera files" << std::endl;
         return 1;
     }
-
-    MatrixXd m = MatrixXd::Random(3,3);
-    cout << "m =" << endl << m << endl;
-    m = m.inverse();
-    cout << "m inverse" << endl << m << endl;
 
     ReadScene(argc, argv);
 

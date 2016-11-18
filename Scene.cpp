@@ -1,9 +1,9 @@
 //
 // Created by Arda on 26.10.2016.
 //
-
+#include "jpeg_reader/aoa_jpeg.h"
 #include "Scene.h"
-#include "Cube.h"
+
 
 #define M_PI 3.14159265358979323846
 
@@ -307,7 +307,7 @@ void Scene::applyTransformations()
             cube.applyTranslation( translation );
         }
 
-        for ( auto& rotation : cube.rotations )
+/*        for ( auto& rotation : cube.rotations )
         {
             for ( auto& triangle : cube.triangles )
             {
@@ -316,7 +316,7 @@ void Scene::applyTransformations()
                 this->rotatePoint( triangle.Vid3, rotation );
                 triangle.computeNormal();
             }
-        }
+        }*/
     }
 
     for ( auto& sphere : this->_spheres )

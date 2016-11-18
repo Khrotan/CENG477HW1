@@ -1,12 +1,7 @@
-cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.5.1)
 project(Edit)
 
-include_directories(GnuWin32)
-
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-
-include_directories(Eigen)
-include_directories(Eigen/src)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O3 -ljpeg")
 
 set(SOURCE_FILES
         jpeg_reader/aoa_jpeg.c
@@ -31,4 +26,10 @@ include_directories(cameras)
 include_directories(images)
 include_directories(scenes)
 
-add_executable(Edit GnuWin32 Eigen/src/ ${SOURCE_FILES} Texture.h Texture.cpp Translation.cpp Translation.h Scaling.cpp Scaling.h Rotation.cpp Rotation.h Cube.cpp Cube.h Transformation.cpp Transformation.h)
+add_executable(Edit  ${SOURCE_FILES} Texture.h Texture.cpp Translation.cpp Translation.h Scaling.cpp Scaling.h Rotation.cpp Rotation.h Cube.cpp Cube.h Transformation.cpp Transformation.h)
+
+FIND_PACKAGE(JPEG REQUIRED)
+IF(JPEG_FOUND)
+    INCLUDE_DIRECTORIES(${JPEG_INCLUDE_DIR})
+    TARGET_LINK_LIBRARIES(Edit ${JPEG_LIBRARIES})
+ENDIF()

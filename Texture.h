@@ -6,9 +6,12 @@
 #define EDIT_TEXTURE_H
 
 #include <string>
+//#include <jpeg_reader/aoa_jpeg.h>
+
 extern "C" {
 #include "jpeg_reader/aoa_jpeg.h"
 }
+
 
 class Texture {
 public:

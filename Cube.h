@@ -6,7 +6,7 @@
 #define EDIT_CUBE_H
 
 
-#include <Vector>
+#include <vector>
 #include "Triangle.h"
 #include "Translation.h"
 #include "Rotation.h"

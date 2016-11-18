@@ -63,9 +63,9 @@ inline Color::Color()
 }
 
 inline Color::Color(double r, double g, double b) {
-    _channels[0] = std::max(0.0, std::min(255.0, r));
-    _channels[1] = std::max(0.0, std::min(255.0, g));
-    _channels[2] = std::max(0.0, std::min(255.0, b));
+    _channels[0] = std::max(0.0, r);
+    _channels[1] = std::max(0.0, g);
+    _channels[2] = std::max(0.0, b);
 }
 
 inline std::istream &operator>>(std::istream &stream, Color &color) {
