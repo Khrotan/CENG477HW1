@@ -313,8 +313,8 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
         ver2.X() = ( CurrentScene->_textures[info.textureId].width/3)-1;
         ver2.Y() = 0;
         ver2.Z() = 0;
-        ver3.X() = ( CurrentScene->_textures[info.textureId].width/3)-1;
-        ver3.Y() = ( CurrentScene->_textures[info.textureId].height/2)-1;
+        ver3.X() = ( CurrentScene->_textures[info.textureId].width/3 )-1;
+        ver3.Y() = ( CurrentScene->_textures[info.textureId].height/2 )-1;
         ver3.Z() = 0;
     }
     else if ( info.triangleId == 5 )
