@@ -12,7 +12,6 @@ extern "C" {
 #include "jpeg_reader/aoa_jpeg.h"
 }
 
-
 class Texture {
 public:
     std::string fileName;

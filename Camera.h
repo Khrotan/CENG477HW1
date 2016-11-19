@@ -4,6 +4,7 @@
 #include "Vector3.h"
 #include "Image.h"
 #include "Ray.h"
+#include "Cube.h"
 #include "PointLight.h"
 #include "Rotation.h"
 #include "Sphere.h"
@@ -38,7 +39,9 @@ public:
 
     bool fillHitInfo( RayHitInfo& closestRayHitInfo, Ray ray ) const;
 
-    void findI_J(RayHitInfo& info, Sphere sphere) const;
+    void findI_J( RayHitInfo& info, Cube cube ) const;
+
+    void findI_J( RayHitInfo& info, Sphere sphere ) const;
 
     const std::string& OutputFile() const
     {

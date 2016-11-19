@@ -249,8 +249,6 @@ Scene* CurrentScene;
 
 void Scene::rotatePoint( Vector3& point, Rotation rotation )
 {
-    //rotation.point.normalize();
-
     double a, b, c, d, x, y, z;
     a = rotation.point.X();
     b = rotation.point.Y();
@@ -300,12 +298,7 @@ void Scene::applyTransformations()
             cube.applyScaling( scaling );
         }
 
-        for ( auto& translation : cube.translations )
-        {
-            cube.applyTranslation( translation );
-        }
-
-/*        for ( auto& rotation : cube.rotations )
+        for ( auto& rotation : cube.rotations )
         {
             for ( auto& triangle : cube.triangles )
             {
@@ -314,7 +307,12 @@ void Scene::applyTransformations()
                 this->rotatePoint( triangle.Vid3, rotation );
                 triangle.computeNormal();
             }
-        }*/
+        }
+
+        for ( auto& translation : cube.translations )
+        {
+            cube.applyTranslation( translation );
+        }
     }
 
     for ( auto& sphere : this->_spheres )
@@ -324,14 +322,14 @@ void Scene::applyTransformations()
             sphere.applyScaling( scaling );
         }
 
-        for ( auto& translation : sphere.translations )
-        {
-            sphere.applyTranlation( translation );
-        }
-
         for ( auto& rotation : sphere.rotations )
         {
             this->rotatePoint( sphere.center, rotation );
+        }
+
+        for ( auto& translation : sphere.translations )
+        {
+            sphere.applyTranlation( translation );
         }
     }
 }

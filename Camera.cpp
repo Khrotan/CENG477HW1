@@ -143,7 +143,7 @@ Color Camera::shade( PointLight light, RayHitInfo closestRayHitInfo, Ray ray, in
     }
     else
     {
-/*        Color jpgColor;
+        Color jpgColor;
         jpgColor._channels[0] = (
                 (double) CurrentScene->_textures[closestRayHitInfo.textureId].image[closestRayHitInfo.i][closestRayHitInfo.j][0] );
         jpgColor._channels[1] = (
@@ -151,10 +151,10 @@ Color Camera::shade( PointLight light, RayHitInfo closestRayHitInfo, Ray ray, in
         jpgColor._channels[2] = (
                 (double) CurrentScene->_textures[closestRayHitInfo.textureId].image[closestRayHitInfo.i][closestRayHitInfo.j][2] );
 
-        diffuseColor = CurrentScene->_materials[closestRayHitInfo.Material].diffuseCoefficient * cos_theta_prime * jpgColor;*/
+        diffuseColor = CurrentScene->_materials[closestRayHitInfo.Material].diffuseCoefficient * cos_theta_prime * jpgColor;
 
-        diffuseColor = incomingRadiance * cos_theta_prime *
-                       CurrentScene->_materials[closestRayHitInfo.Material].diffuseCoefficient;
+        /*diffuseColor = incomingRadiance * cos_theta_prime *
+                       CurrentScene->_materials[closestRayHitInfo.Material].diffuseCoefficient;*/
     }
 
     //billy phong
@@ -293,12 +293,245 @@ void Camera::findI_J( RayHitInfo& info, Sphere sphere ) const
     v = (theta) / M_PI;
 
     info.j = round(u * (CurrentScene->_textures[sphere.textureId].width));
+
+    if ( info.j == (CurrentScene->_textures[sphere.textureId].width))
+    { info.j--; }
+
     info.i = round(v * (CurrentScene->_textures[sphere.textureId].height));
 
     if ( info.i == (CurrentScene->_textures[sphere.textureId].height))
     { info.i--; }
-    if ( info.j == (CurrentScene->_textures[sphere.textureId].width))
-    { info.j--; }
-
-    info.textureId = sphere.textureId;
 }
+
+/*void textureCoordTri(Ray *r, Vec3 a, Vec3 b, Vec3 c) {
+  double aa, a1, a2, a3;
+  double alpha, beta, gamma;
+  double thetaraab, thetarabc, thetaraac, thetaabc;
+  int i, j;
+
+  thetaabc = dot(add(b, mult(a, -1)), add(c, mult(a, -1))) /
+             (length(add(b, mult(a, -1))) * length(add(c, mult(a, -1))));
+  if (thetaabc < -1) thetaabc = -1;
+  if (thetaabc > 1) thetaabc = 1;
+  thetaabc = acos(thetaabc);
+  thetaraab = dot(add(b, mult(r->a, -1)), add(a, mult(r->a, -1))) /
+              (length(add(b, mult(r->a, -1))) * length(add(a, mult(r->a, -1))));
+  if (thetaraab < -1) thetaraab = -1;
+  if (thetaraab > 1) thetaraab = 1;
+  thetaraab = acos(thetaraab);
+  thetarabc = dot(add(b, mult(r->a, -1)), add(c, mult(r->a, -1))) /
+              (length(add(b, mult(r->a, -1))) * length(add(c, mult(r->a, -1))));
+  if (thetarabc < -1) thetarabc = -1;
+  if (thetarabc > 1) thetarabc = 1;
+  thetarabc = acos(thetarabc);
+  thetaraac = dot(add(c, mult(r->a, -1)), add(a, mult(r->a, -1))) /
+              (length(add(c, mult(r->a, -1))) * length(add(a, mult(r->a, -1))));
+  if (thetaraac < -1) thetaraac = -1;
+  if (thetaraac > 1) thetaraac = 1;
+  thetaraac = acos(thetaraac);
+
+  aa = ABS((sin(thetaabc) * length(add(b, mult(a, -1))) *
+            length(add(c, mult(a, -1)))) /
+           2);
+  a1 = ABS((sin(thetarabc) * length(add(b, mult(r->a, -1))) *
+            length(add(c, mult(r->a, -1)))) /
+           2);
+  a2 = ABS((sin(thetaraac) * length(add(a, mult(r->a, -1))) *
+            length(add(c, mult(r->a, -1)))) /
+           2);
+  a3 = ABS((sin(thetaraab) * length(add(b, mult(r->a, -1))) *
+            length(add(a, mult(r->a, -1)))) /
+           2);
+
+  alpha = a1 / aa;
+  beta = a2 / aa;
+  gamma = a3 / aa;
+
+  // std::cout<<aa<<' '<<a1<<' '<<a2<<' '<<a3<<std::endl;
+
+  if (r->tri == 0)  // front
+  {
+    Vec3 bir, iki, uc;
+    bir.x = 0;
+    bir.y = textures[r->tid - 1].height / 2;
+    bir.z = 0;
+    iki.x = (textures[r->tid - 1].width / 3) - 1;
+    iki.y = textures[r->tid - 1].height / 2;
+    iki.z = 0;
+    uc.x = (textures[r->tid - 1].width / 3) - 1;
+    uc.y = textures[r->tid - 1].height - 1;
+    uc.z = 0;
+
+    r->j = round(bir.x * alpha + iki.x * beta + uc.x * gamma);
+    r->i = round(bir.y * alpha + iki.y * beta + uc.y * gamma);
+
+  } else if (r->tri == 1) {
+    Vec3 bir, iki, uc;
+    bir.x = (textures[r->tid - 1].width / 3) - 1;
+    bir.y = textures[r->tid - 1].height - 1;
+    bir.z = 0;
+    iki.x = 0;
+    iki.y = textures[r->tid - 1].height - 1;
+    iki.z = 0;
+    uc.x = 0;
+    uc.y = textures[r->tid - 1].height / 2;
+    uc.z = 0;
+
+    r->j = round(bir.x * alpha + iki.x * beta + uc.x * gamma);
+    r->i = round(bir.y * alpha + iki.y * beta + uc.y * gamma);
+  } else if (r->tri == 2)  // back
+  {
+    Vec3 bir, iki, uc;
+    bir.x = (textures[r->tid - 1].width / 3);
+    bir.y = 0;
+    bir.z = 0;
+    iki.x = (2 * textures[r->tid - 1].width / 3) - 1;
+    iki.y = 0;
+    iki.z = 0;
+    uc.x = (2 * textures[r->tid - 1].width / 3) - 1;
+    uc.y = (textures[r->tid - 1].height / 2) - 1;
+    uc.z = 0;
+
+    r->j = round(bir.x * alpha + iki.x * beta + uc.x * gamma);
+    r->i = round(bir.y * alpha + iki.y * beta + uc.y * gamma);
+
+  } else if (r->tri == 3) {
+    Vec3 bir, iki, uc;
+    bir.x = (2 * textures[r->tid - 1].width / 3) - 1;
+    bir.y = (textures[r->tid - 1].height / 2) - 1;
+    bir.z = 0;
+    iki.x = (textures[r->tid - 1].width / 3);
+    iki.y = (textures[r->tid - 1].height / 2) - 1;
+    iki.z = 0;
+    uc.x = (textures[r->tid - 1].width / 3);
+    uc.y = 0;
+    uc.z = 0;
+
+    r->j = round(bir.x * alpha + iki.x * beta + uc.x * gamma);
+    r->i = round(bir.y * alpha + iki.y * beta + uc.y * gamma);
+  } else if (r->tri == 4)  // right
+  {
+    Vec3 bir, iki, uc;
+    bir.x = (textures[r->tid - 1].width / 3);
+    bir.y = (textures[r->tid - 1].height / 2);
+    bir.z = 0;
+    iki.x = (2 * textures[r->tid - 1].width / 3) - 1;
+    iki.y = (textures[r->tid - 1].height / 2);
+    iki.z = 0;
+    uc.x = (2 * textures[r->tid - 1].width / 3) - 1;
+    uc.y = (textures[r->tid - 1].height) - 1;
+    uc.z = 0;
+
+    r->j = round(bir.x * alpha + iki.x * beta + uc.x * gamma);
+    r->i = round(bir.y * alpha + iki.y * beta + uc.y * gamma);
+
+  } else if (r->tri == 5) {
+    Vec3 bir, iki, uc;
+    bir.x = (2 * textures[r->tid - 1].width / 3) - 1;
+    bir.y = (textures[r->tid - 1].height) - 1;
+    bir.z = 0;
+    iki.x = (textures[r->tid - 1].width / 3);
+    iki.y = (textures[r->tid - 1].height) - 1;
+    iki.z = 0;
+    uc.x = (textures[r->tid - 1].width / 3);
+    uc.y = (textures[r->tid - 1].height / 2);
+    uc.z = 0;
+
+    r->j = round(bir.x * alpha + iki.x * beta + uc.x * gamma);
+    r->i = round(bir.y * alpha + iki.y * beta + uc.y * gamma);
+  } else if (r->tri == 6)  // top
+  {
+    Vec3 bir, iki, uc;
+    bir.x = (2 * textures[r->tid - 1].width / 3);
+    bir.y = (textures[r->tid - 1].height / 2);
+    bir.z = 0;
+    iki.x = (2 * textures[r->tid - 1].width) - 1;
+    iki.y = (textures[r->tid - 1].height / 2);
+    iki.z = 0;
+    uc.x = (2 * textures[r->tid - 1].width) - 1;
+    uc.y = (textures[r->tid - 1].height) - 1;
+    uc.z = 0;
+
+    r->j = round(bir.x * alpha + iki.x * beta + uc.x * gamma);
+    r->i = round(bir.y * alpha + iki.y * beta + uc.y * gamma);
+
+  } else if (r->tri == 7) {
+    Vec3 bir, iki, uc;
+    bir.x = (2 * textures[r->tid - 1].width) - 1;
+    bir.y = (textures[r->tid - 1].height) - 1;
+    bir.z = 0;
+    iki.x = (2 * textures[r->tid - 1].width / 3);
+    iki.y = (textures[r->tid - 1].height) - 1;
+    iki.z = 0;
+    uc.x = (2 * textures[r->tid - 1].width / 3);
+    uc.y = (textures[r->tid - 1].height / 2);
+    uc.z = 0;
+
+    r->j = round(bir.x * alpha + iki.x * beta + uc.x * gamma);
+    r->i = round(bir.y * alpha + iki.y * beta + uc.y * gamma);
+  } else if (r->tri == 8)  // left
+  {
+    Vec3 bir, iki, uc;
+    bir.x = 0;
+    bir.y = 0;
+    bir.z = 0;
+    iki.x = (textures[r->tid - 1].width / 3) - 1;
+    iki.y = 0;
+    iki.z = 0;
+    uc.x = (textures[r->tid - 1].width / 3) - 1;
+    uc.y = (textures[r->tid - 1].height / 2) - 1;
+    uc.z = 0;
+
+    r->j = round(bir.x * alpha + iki.x * beta + uc.x * gamma);
+    r->i = round(bir.y * alpha + iki.y * beta + uc.y * gamma);
+
+  } else if (r->tri == 9) {
+    Vec3 bir, iki, uc;
+    bir.x = (textures[r->tid - 1].width / 3) - 1;
+    bir.y = (textures[r->tid - 1].height / 2) - 1;
+    bir.z = 0;
+    iki.x = 0;
+    iki.y = (textures[r->tid - 1].height / 2) - 1;
+    iki.z = 0;
+    uc.x = 0;
+    uc.y = 0;
+    uc.z = 0;
+
+    r->j = round(bir.x * alpha + iki.x * beta + uc.x * gamma);
+    r->i = round(bir.y * alpha + iki.y * beta + uc.y * gamma);
+  } else if (r->tri == 10)  // bottom
+  {
+    Vec3 bir, iki, uc;
+    bir.x = (2 * textures[r->tid - 1].width / 3) - 1;
+    bir.y = 0;
+    bir.z = 0;
+    iki.x = (textures[r->tid - 1].width) - 1;
+    iki.y = 0;
+    iki.z = 0;
+    uc.x = (textures[r->tid - 1].width) - 1;
+    uc.y = (textures[r->tid - 1].height / 2) - 1;
+    uc.z = 0;
+
+    r->j = round(bir.x * alpha + iki.x * beta + uc.x * gamma);
+    r->i = round(bir.y * alpha + iki.y * beta + uc.y * gamma);
+
+  } else if (r->tri == 11) {
+    Vec3 bir, iki, uc;
+    bir.x = (textures[r->tid - 1].width) - 1;
+    bir.y = (textures[r->tid - 1].height / 2) - 1;
+    bir.z = 0;
+    iki.x = (2 * textures[r->tid - 1].width / 3) - 1;
+    iki.y = (textures[r->tid - 1].height / 2) - 1;
+    iki.z = 0;
+    uc.x = (2 * textures[r->tid - 1].width / 3) - 1;
+    uc.y = 0;
+    uc.z = 0;
+
+    r->j = round(bir.x * alpha + iki.x * beta + uc.x * gamma);
+    r->i = round(bir.y * alpha + iki.y * beta + uc.y * gamma);
+  }
+
+  if (r->j >= textures[r->tid - 1].width) r->j = textures[r->tid - 1].width - 1;
+  if (r->i >= textures[r->tid - 1].height)
+    r->i = textures[r->tid - 1].height - 1;
+}*/
