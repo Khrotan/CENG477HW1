@@ -39,7 +39,7 @@ public:
 
     bool fillHitInfo( RayHitInfo& closestRayHitInfo, Ray ray ) const;
 
-    void findI_J( RayHitInfo& info, Cube cube ) const;
+    void findI_J_cube( RayHitInfo& info ) const;
 
     void findI_J( RayHitInfo& info, Sphere sphere ) const;
 

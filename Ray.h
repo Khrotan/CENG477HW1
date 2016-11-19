@@ -36,7 +36,7 @@ struct RayHitInfo
 
     int meshId, triangleId, sphereId, textureId, i, j;
 
-    double       Parameter;
+    double       Parameter, alpha, beta, gamma;
 };
 
 #endif //RAYTRACER_RAY_H

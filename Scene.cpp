@@ -111,8 +111,7 @@ void ReadScene( int argc, char** argv )
         infile >> dummyTexture.fileName;
 
         read_jpeg_header( dummyTexture.fileName.c_str(), &dummyTexture.width, &dummyTexture.height );
-
-        dummyTexture.image = (UCOLOR**) malloc( sizeof( UCOLOR** ) * ( dummyTexture.height ) );
+        dummyTexture.image = (UCOLOR**) malloc( sizeof( UCOLOR** ) * dummyTexture.height );
 
         for ( int j = 0 ; j < dummyTexture.height ; j++ )
         {
@@ -120,7 +119,6 @@ void ReadScene( int argc, char** argv )
         }
 
         read_jpeg( dummyTexture.fileName.c_str(), dummyTexture.image, &dummyTexture.width, &dummyTexture.height );
-
         scene->_textures.push_back( dummyTexture );
     }
 
