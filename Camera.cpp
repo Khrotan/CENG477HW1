@@ -143,14 +143,7 @@ Color Camera::shade( PointLight light, RayHitInfo closestRayHitInfo, Ray ray, in
     }
     else
     {
-/*        cout << (double)
-                CurrentScene->_textures[closestRayHitInfo.textureId].image[closestRayHitInfo.i][closestRayHitInfo.j][0] <<
-        " " <<
-        (double) CurrentScene->_textures[closestRayHitInfo.textureId].image[closestRayHitInfo.i][closestRayHitInfo.j][1] <<
-        " " <<
-        (double) CurrentScene->_textures[closestRayHitInfo.textureId].image[closestRayHitInfo.i][closestRayHitInfo.j][2] <<
-        endl;*/
-        Color jpgColor;
+/*        Color jpgColor;
         jpgColor._channels[0] = (
                 (double) CurrentScene->_textures[closestRayHitInfo.textureId].image[closestRayHitInfo.i][closestRayHitInfo.j][0] );
         jpgColor._channels[1] = (
@@ -158,10 +151,10 @@ Color Camera::shade( PointLight light, RayHitInfo closestRayHitInfo, Ray ray, in
         jpgColor._channels[2] = (
                 (double) CurrentScene->_textures[closestRayHitInfo.textureId].image[closestRayHitInfo.i][closestRayHitInfo.j][2] );
 
-        diffuseColor = CurrentScene->_materials[closestRayHitInfo.Material].diffuseCoefficient * cos_theta_prime * jpgColor;
+        diffuseColor = CurrentScene->_materials[closestRayHitInfo.Material].diffuseCoefficient * cos_theta_prime * jpgColor;*/
 
-        //cout << diffuseColor._channels[0] << " " << diffuseColor._channels[1] << " " << diffuseColor._channels[2] <<
-        //endl;
+        diffuseColor = incomingRadiance * cos_theta_prime *
+                       CurrentScene->_materials[closestRayHitInfo.Material].diffuseCoefficient;
     }
 
     //billy phong
@@ -225,7 +218,6 @@ bool Camera::fillHitInfo( RayHitInfo& closestRayHitInfo, Ray ray ) const
                 closestRayHitInfo.textureId = CurrentScene->_cubes[k].textureId;
             }
         }
-        cout << "zarda" << endl;
     }
 
     for ( int k = 0 ; k < CurrentScene->_spheres.size() ; k++ )
@@ -247,7 +239,6 @@ bool Camera::fillHitInfo( RayHitInfo& closestRayHitInfo, Ray ray ) const
 
             findI_J(closestRayHitInfo, sphere);
         }
-        cout << "marda" << endl;
     }
 
     if ( t_min == std::numeric_limits<double>::max())
@@ -285,8 +276,8 @@ void Camera::findI_J( RayHitInfo& info, Sphere sphere ) const
         }
     }*/
 
-    theta = acos((temp.getY() - sphere.center.getY()) / sphere.radius);
-    fi    = -(atan2((temp.getZ() - sphere.center.getZ()), (temp.getX() - sphere.center.getX())));
+    theta = acos((temp.Y() - sphere.center.Y()) / sphere.radius);
+    fi    = -(atan2((temp.Z() - sphere.center.Z()), (temp.X() - sphere.center.X())));
 
     fi += M_PI;
 

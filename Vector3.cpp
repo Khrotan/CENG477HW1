@@ -111,17 +111,17 @@ Vector3::Vector3( double x, double y, double z )
     this->_data[2] = z;
 }
 
-double Vector3::getX()
+double Vector3::X()
 {
     return this->_data[0];
 }
 
-double Vector3::getY()
+double Vector3::Y()
 {
     return this->_data[1];
 }
 
-double Vector3::getZ()
+double Vector3::Z()
 {
     return this->_data[2];
 }

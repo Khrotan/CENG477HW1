@@ -2,7 +2,6 @@
 // Created by Arda on 16.11.2016.
 //
 
-#include <math.h>
 #include "Cube.h"
 
 Cube::Cube() :

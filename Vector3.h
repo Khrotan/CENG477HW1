@@ -38,9 +38,9 @@ public:
 
     Color operator*( Color c ) const;
 
-    double getX();
-    double getY();
-    double getZ();
+    double X();
+    double Y();
+    double Z();
 };
 
 #endif //MATH_VECTOR3_H

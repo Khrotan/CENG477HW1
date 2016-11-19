@@ -243,50 +243,48 @@ void ReadScene( int argc, char** argv )
     CurrentScene = scene;
 
     CurrentScene->applyTransformations();
-
-    cout << "arda" << endl;
 }
 
 Scene* CurrentScene;
 
 void Scene::rotatePoint( Vector3& point, Rotation rotation )
 {
-    rotation.point.normalize();
+    //rotation.point.normalize();
 
     double a, b, c, d, x, y, z;
-    a = rotation.point._data[0];
-    b = rotation.point._data[1];
-    c = rotation.point._data[2];
+    a = rotation.point.X();
+    b = rotation.point.Y();
+    c = rotation.point.Z();
     d = sqrt( ( b * b ) + ( c * c ) );
 
     if ( d != 0 )
     {
-        y = ( ( point._data[1] * c ) / d ) - ( ( point._data[2] * b ) / d );
-        z = ( ( point._data[1] * b ) / d ) + ( ( point._data[2] * c ) / d );
+        y = ( (point.Y() * c ) / d ) - ( ( point.Z() * b ) / d );
+        z = ( (point.Y() * b ) / d ) + ( ( point.Z() * c ) / d );
         point._data[1] = y;
         point._data[2] = z;
     }
 
-    x = ( point._data[0] * d ) - ( point._data[2] * a );
-    z = ( point._data[0] * a ) + ( point._data[2] * d );
+    x = ( point.X() * d ) - ( point.Z() * a );
+    z = ( point.X() * a ) + ( point.Z() * d );
     point._data[0] = x;
     point._data[2] = z;
-    x = ( point._data[0] * cos( ( rotation.alpha * M_PI ) / 180.0 ) ) -
-        ( point._data[1] * sin( ( rotation.alpha * M_PI ) / 180.0 ) );
-    y = ( point._data[0] * sin( ( rotation.alpha * M_PI ) / 180.0 ) ) +
-        ( point._data[1] * cos( ( rotation.alpha * M_PI ) / 180.0 ) );
+    x = ( point.X() * cos( ( rotation.alpha * M_PI ) / 180.0 ) ) -
+        ( point.Y() * sin( ( rotation.alpha * M_PI ) / 180.0 ) );
+    y = ( point.X() * sin( ( rotation.alpha * M_PI ) / 180.0 ) ) +
+        ( point.Y() * cos( ( rotation.alpha * M_PI ) / 180.0 ) );
     point._data[0] = x;
     point._data[1] = y;
 
-    x = ( point._data[0] * d ) + ( point._data[2] * a );
-    z = ( point._data[2] * d ) - ( point._data[0] * a );
+    x = ( point.X() * d ) + ( point.Z() * a );
+    z = ( point.Z() * d ) - ( point.X() * a );
     point._data[0] = x;
     point._data[2] = z;
 
     if ( d != 0 )
     {
-        y = ( ( point._data[1] * c ) / d ) + ( ( point._data[2] * b ) / d );
-        z = ( ( point._data[2] * c ) / d ) - ( ( point._data[1] * b ) / d );
+        y = ( ( point.Y() * c ) / d ) + ( ( point.Z() * b ) / d );
+        z = ( ( point.Z() * c ) / d ) - ( ( point.Y() * b ) / d );
         point._data[1] = y;
         point._data[2] = z;
     }
