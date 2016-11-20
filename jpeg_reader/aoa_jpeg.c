@@ -1,7 +1,10 @@
 #include <stdio.h>
-#include <jpeglib.h>
+
 #include <stdlib.h>
 #include "aoa_jpeg.h"
+
+#include <jpeglib.h>
+
 
 void write_jpeg(const char *filename, UCOLOR **image, int width, int height)
 {

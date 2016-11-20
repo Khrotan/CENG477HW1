@@ -5,26 +5,26 @@
 #include "Cube.h"
 
 Cube::Cube() :
-        solArkaUst( Vector3( -0.5, 0.5, -0.5 ) ),
-        solOnUst( Vector3( -0.5, 0.5, 0.5 ) ),
-        sagOnUst( Vector3( 0.5, 0.5, 0.5 ) ),
-        sagArkaUst( Vector3( 0.5, 0.5, -0.5 ) ),
-        solArkaAlt( Vector3( -0.5, -0.5, -0.5 ) ),
-        solOnAlt( Vector3( -0.5, -0.5, 0.5 ) ),
-        sagOnAlt( Vector3( 0.5, -0.5, 0.5 ) ),
-        sagArkaAlt( Vector3( 0.5, -0.5, -0.5 ) ),
-        up_1( Triangle( solOnUst, sagOnUst, sagArkaUst ) ),
-        up_2( Triangle( solOnUst, sagArkaUst, solArkaUst ) ),
-        bottom_1( Triangle( solOnAlt, solArkaAlt, sagArkaUst ) ),
-        bottom_2( Triangle( solOnAlt, sagArkaUst, sagOnAlt ) ),
-        left_1( Triangle( solArkaUst, solOnAlt, solOnUst ) ),
-        left_2( Triangle( solArkaUst, solArkaAlt, solOnAlt ) ),
-        right_1( Triangle( sagArkaUst, sagOnUst, sagOnAlt ) ),
-        right_2( Triangle( sagArkaAlt, sagArkaUst, sagOnAlt ) ),
-        front_1( Triangle( solOnAlt, sagOnAlt, solOnUst ) ),
-        front_2( Triangle( solOnUst, sagOnUst, solOnAlt ) ),
-        back_1( Triangle( sagArkaUst, sagArkaAlt, solArkaAlt ) ),
-        back_2( Triangle( solArkaUst, sagArkaUst, solArkaAlt ) )
+        vec0( Vector3( 0.5, 0.5, 0.5 ) ),
+        vec1( Vector3( 0.5, -0.5, 0.5 ) ),
+        vec2( Vector3( -0.5, 0.5, 0.5 ) ),
+        vec3( Vector3( -0.5, -0.5, 0.5 ) ),
+        vec4( Vector3( 0.5, 0.5, -0.5 ) ),
+        vec5( Vector3( 0.5, -0.5, -0.5 ) ),
+        vec6( Vector3( -0.5, 0.5, -0.5 ) ),
+        vec7( Vector3( -0.5, -0.5, -0.5 ) ),
+        up_1( Triangle( vec6, vec2, vec0 ) ),
+        up_2( Triangle( vec6, vec0, vec4 ) ),
+        bottom_1( Triangle( vec1, vec3, vec5 ) ),
+        bottom_2( Triangle( vec7, vec5, vec3 ) ),
+        left_1( Triangle( vec7, vec3, vec2 ) ),
+        left_2( Triangle( vec2, vec6, vec7 ) ),
+        right_1( Triangle( vec0, vec1, vec4 ) ),
+        right_2( Triangle( vec5, vec4, vec1 ) ),
+        front_1( Triangle( vec2, vec1, vec0 ) ),
+        front_2( Triangle( vec3, vec1, vec2 ) ),
+        back_1( Triangle( vec4, vec5, vec6 ) ),
+        back_2( Triangle( vec7, vec6, vec5 ) )
 {
     this->triangles.push_back( up_1 );
     this->triangles.push_back( up_2 );

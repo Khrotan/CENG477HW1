@@ -24,17 +24,17 @@ public:
 
     Cube();
 
-    Vector3 solArkaUst;
-    Vector3 solOnUst;
+    Vector3 vec0;
+    Vector3 vec1;
 
-    Vector3 sagOnUst;
-    Vector3 sagArkaUst;
+    Vector3 vec2;
+    Vector3 vec3;
 
-    Vector3 solArkaAlt;
-    Vector3 solOnAlt;
+    Vector3 vec4;
+    Vector3 vec5;
 
-    Vector3 sagOnAlt;
-    Vector3 sagArkaAlt;
+    Vector3 vec6;
+    Vector3 vec7;
 
     //6 faces
     //up bottom

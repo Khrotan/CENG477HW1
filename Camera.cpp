@@ -5,7 +5,6 @@
 #include <limits>
 #include <math.h>
 #include "Camera.h"
-#include "Mesh.h"
 #include "Scene.h"
 
 Image Camera::Render() const
@@ -144,13 +143,14 @@ Color Camera::shade( PointLight light, RayHitInfo closestRayHitInfo, Ray ray, in
     {
         Color jpgColor;
         jpgColor._channels[0] = (
-                (double) CurrentScene->_textures[closestRayHitInfo.textureId].image[closestRayHitInfo.i][closestRayHitInfo.j][0] );
+                (double) CurrentScene->_textures[closestRayHitInfo.textureId].image[closestRayHitInfo.i][closestRayHitInfo.j][0]);
         jpgColor._channels[1] = (
-                (double) CurrentScene->_textures[closestRayHitInfo.textureId].image[closestRayHitInfo.i][closestRayHitInfo.j][1] );
+                (double) CurrentScene->_textures[closestRayHitInfo.textureId].image[closestRayHitInfo.i][closestRayHitInfo.j][1]);
         jpgColor._channels[2] = (
-                (double) CurrentScene->_textures[closestRayHitInfo.textureId].image[closestRayHitInfo.i][closestRayHitInfo.j][2] );
+                (double) CurrentScene->_textures[closestRayHitInfo.textureId].image[closestRayHitInfo.i][closestRayHitInfo.j][2]);
 
-        diffuseColor = CurrentScene->_materials[closestRayHitInfo.Material].diffuseCoefficient * cos_theta_prime * jpgColor;
+        diffuseColor =
+                CurrentScene->_materials[closestRayHitInfo.Material].diffuseCoefficient * cos_theta_prime * jpgColor;
 
         /*diffuseColor = incomingRadiance * cos_theta_prime *
                        CurrentScene->_materials[closestRayHitInfo.Material].diffuseCoefficient;*/
@@ -259,147 +259,133 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
     {
         ver1.X() = 2 * CurrentScene->_textures[info.textureId].width / 3;
         ver1.Y() = CurrentScene->_textures[info.textureId].height / 2;
-        ver1.Z() = 0;
-        
-        ver2.X() = 2 * CurrentScene->_textures[info.textureId].width - 1;
+
+        ver2.X() = CurrentScene->_textures[info.textureId].width - 1;
         ver2.Y() = CurrentScene->_textures[info.textureId].height / 2;
-        ver2.Z() = 0;
-        
-        ver3.X() = 2 * CurrentScene->_textures[info.textureId].width - 1;
+
+        ver3.X() = CurrentScene->_textures[info.textureId].width - 1;
         ver3.Y() = CurrentScene->_textures[info.textureId].height - 1;
-        ver3.Z() = 0;
     }
     else if ( info.triangleId == 1 ) //up_2
     {
-        ver1.X() = 2 * CurrentScene->_textures[info.textureId].width - 1;
+        ver1.X() = CurrentScene->_textures[info.textureId].width - 1;
         ver1.Y() = CurrentScene->_textures[info.textureId].height - 1;
-        ver1.Z() = 0;
+
         ver2.X() = 2 * CurrentScene->_textures[info.textureId].width / 3;
         ver2.Y() = CurrentScene->_textures[info.textureId].height - 1;
-        ver2.Z() = 0;
+
         ver3.X() = 2 * CurrentScene->_textures[info.textureId].width / 3;
         ver3.Y() = CurrentScene->_textures[info.textureId].height / 2;
-        ver3.Z() = 0;
     }
     else if ( info.triangleId == 2 ) // bottom_1
     {
-        ver1.X() = (2*CurrentScene->_textures[info.textureId].width/3)-1;
+        ver1.X() = (2 * CurrentScene->_textures[info.textureId].width / 3) - 1;
         ver1.Y() = 0;
-        ver1.Z() = 0;
-        ver2.X() = (CurrentScene->_textures[info.textureId].width)-1;
+
+        ver2.X() = (CurrentScene->_textures[info.textureId].width) - 1;
         ver2.Y() = 0;
-        ver2.Z() = 0;
-        ver3.X() = (CurrentScene->_textures[info.textureId].width)-1;
-        ver3.Y() = (CurrentScene->_textures[info.textureId].height/2)-1;
-        ver3.Z() = 0;
+
+        ver3.X() = (CurrentScene->_textures[info.textureId].width) - 1;
+        ver3.Y() = (CurrentScene->_textures[info.textureId].height / 2) - 1;
     }
-    else if ( info.triangleId == 3 )
+    else if ( info.triangleId == 3 ) //bottom_2
     {
-        ver1.X() = (CurrentScene->_textures[info.textureId].width)-1;
-        ver1.Y() = (CurrentScene->_textures[info.textureId].height/2)-1;
-        ver1.Z() = 0;
-        ver2.X() = (2*CurrentScene->_textures[info.textureId].width/3)-1;
-        ver2.Y() = (CurrentScene->_textures[info.textureId].height/2)-1;
-        ver2.Z() = 0;
-        ver3.X() = (2*CurrentScene->_textures[info.textureId].width/3)-1;
+        ver1.X() = (CurrentScene->_textures[info.textureId].width) - 1;
+        ver1.Y() = (CurrentScene->_textures[info.textureId].height / 2) - 1;
+
+        ver2.X() = (2 * CurrentScene->_textures[info.textureId].width / 3) - 1;
+        ver2.Y() = (CurrentScene->_textures[info.textureId].height / 2) - 1;
+
+        ver3.X() = (2 * CurrentScene->_textures[info.textureId].width / 3) - 1;
         ver3.Y() = 0;
-        ver3.Z() = 0;
     }
-    else if ( info.triangleId == 4 ) //left
+    else if ( info.triangleId == 4 ) //left_1
     {
         ver1.X() = 0;
         ver1.Y() = 0;
-        ver1.Z() = 0;
-        ver2.X() = ( CurrentScene->_textures[info.textureId].width/3)-1;
+
+        ver2.X() = CurrentScene->_textures[info.textureId].width / 3 - 1;
         ver2.Y() = 0;
-        ver2.Z() = 0;
-        ver3.X() = ( CurrentScene->_textures[info.textureId].width/3 )-1;
-        ver3.Y() = ( CurrentScene->_textures[info.textureId].height/2 )-1;
-        ver3.Z() = 0;
+
+        ver3.X() = CurrentScene->_textures[info.textureId].width / 3 - 1;
+        ver3.Y() = CurrentScene->_textures[info.textureId].height / 2 - 1;
     }
-    else if ( info.triangleId == 5 )
+    else if ( info.triangleId == 5 ) //left_2
     {
-        ver1.X() = (CurrentScene->_textures[info.textureId].width/3)-1;
-        ver1.Y() = (CurrentScene->_textures[info.textureId].height/2)-1;
-        ver1.Z() = 0;
+        ver1.X() = CurrentScene->_textures[info.textureId].width / 3 - 1;
+        ver1.Y() = CurrentScene->_textures[info.textureId].height / 2 - 1;
+
         ver2.X() = 0;
-        ver2.Y() = (CurrentScene->_textures[info.textureId].height/2)-1;
-        ver2.Z() = 0;
+        ver2.Y() = CurrentScene->_textures[info.textureId].height / 2 - 1;
+
         ver3.X() = 0;
         ver3.Y() = 0;
-        ver3.Z() = 0;
     }
-    else if ( info.triangleId == 6 ) //right
+    else if ( info.triangleId == 6 ) //right_1
     {
-        ver1.X() = (CurrentScene->_textures[info.textureId].width/3);
-        ver1.Y() = (CurrentScene->_textures[info.textureId].height/2);
-        ver1.Z() = 0;
-        ver2.X() = (2*CurrentScene->_textures[info.textureId].width/3)-1;
-        ver2.Y() = (CurrentScene->_textures[info.textureId].height/2);
-        ver2.Z() = 0;
-        ver3.X() = (2*CurrentScene->_textures[info.textureId].width/3)-1;
-        ver3.Y() = (CurrentScene->_textures[info.textureId].height)-1;
-        ver3.Z() = 0;
+        ver1.X() = CurrentScene->_textures[info.textureId].width / 3;
+        ver1.Y() = CurrentScene->_textures[info.textureId].height / 2;
+
+        ver2.X() = 2 * CurrentScene->_textures[info.textureId].width / 3 - 1;
+        ver2.Y() = CurrentScene->_textures[info.textureId].height / 2;
+
+        ver3.X() = 2 * CurrentScene->_textures[info.textureId].width / 3 - 1;
+        ver3.Y() = CurrentScene->_textures[info.textureId].height - 1;
     }
-    else if ( info.triangleId == 7 )
+    else if ( info.triangleId == 7 ) //right_2
     {
-        ver1.X() = (2*CurrentScene->_textures[info.textureId].width/3)-1;
-        ver1.Y() = (CurrentScene->_textures[info.textureId].height)-1;
-        ver1.Z() = 0;
-        ver2.X() = (CurrentScene->_textures[info.textureId].width/3);
-        ver2.Y() = ( CurrentScene->_textures[info.textureId].height)-1;
-        ver2.Z() = 0;
-        ver3.X() = (CurrentScene->_textures[info.textureId].width/3);
-        ver3.Y() = (CurrentScene->_textures[info.textureId].height/2);
-        ver3.Z() = 0;
+        ver1.X() = 2 * CurrentScene->_textures[info.textureId].width / 3 - 1;
+        ver1.Y() = (CurrentScene->_textures[info.textureId].height) - 1;
+
+        ver2.X() = CurrentScene->_textures[info.textureId].width / 3;
+        ver2.Y() = (CurrentScene->_textures[info.textureId].height) - 1;
+
+        ver3.X() = CurrentScene->_textures[info.textureId].width / 3;
+        ver3.Y() = CurrentScene->_textures[info.textureId].height / 2;
     }
-    else if ( info.triangleId == 8 ) //front
+    else if ( info.triangleId == 8 ) //front_1
     {
         ver1.X() = 0;
-        ver1.Y() = CurrentScene->_textures[info.textureId].height/2;
-        ver1.Z() = 0;
-        ver2.X() = (CurrentScene->_textures[info.textureId].width/3)-1;
-        ver2.Y() = CurrentScene->_textures[info.textureId].height/2;
-        ver2.Z() = 0 ;
-        ver3.X() = (CurrentScene->_textures[info.textureId].width/3)-1;
-        ver3.Y() = CurrentScene->_textures[info.textureId].height-1;
-        ver3.Z() = 0;
+        ver1.Y() = CurrentScene->_textures[info.textureId].height / 2;
+
+        ver2.X() = CurrentScene->_textures[info.textureId].width / 3 - 1;
+        ver2.Y() = CurrentScene->_textures[info.textureId].height / 2;
+
+        ver3.X() = CurrentScene->_textures[info.textureId].width / 3 - 1;
+        ver3.Y() = CurrentScene->_textures[info.textureId].height - 1;
     }
-    else if ( info.triangleId == 9 )
+    else if ( info.triangleId == 9 ) //front_2
     {
-        ver1.X() = (CurrentScene->_textures[info.textureId].width/3)-1;
-        ver1.Y() = CurrentScene->_textures[info.textureId].height-1;
-        ver1.Z() = 0;
+        ver1.X() = CurrentScene->_textures[info.textureId].width / 3 - 1;
+        ver1.Y() = CurrentScene->_textures[info.textureId].height - 1;
+
         ver2.X() = 0;
-        ver2.Y() = CurrentScene->_textures[info.textureId].height-1;
-        ver2.Z() = 0;
+        ver2.Y() = CurrentScene->_textures[info.textureId].height - 1;
+
         ver3.X() = 0;
-        ver3.Y() = CurrentScene->_textures[info.textureId].height/2;
-        ver3.Z() = 0;
+        ver3.Y() = CurrentScene->_textures[info.textureId].height / 2;
     }
-    else if ( info.triangleId == 10 )
+    else if ( info.triangleId == 10 ) //back_1
     {
-        ver1.X() = (CurrentScene->_textures[info.textureId].width/3);
+        ver1.X() = CurrentScene->_textures[info.textureId].width / 3;
         ver1.Y() = 0;
-        ver1.Z() = 0;
-        ver2.X() = (2*CurrentScene->_textures[info.textureId].width/3)-1;
+
+        ver2.X() = 2 * CurrentScene->_textures[info.textureId].width / 3 - 1;
         ver2.Y() = 0;
-        ver2.Z() = 0;
-        ver3.X() = (2*CurrentScene->_textures[info.textureId].width/3)-1;
-        ver3.Y() = (CurrentScene->_textures[info.textureId].height/2)-1;
-        ver3.Z() = 0;
+
+        ver3.X() = 2 * CurrentScene->_textures[info.textureId].width / 3 - 1;
+        ver3.Y() = CurrentScene->_textures[info.textureId].height / 2 - 1;
     }
-    else if ( info.triangleId == 11 )
+    else if ( info.triangleId == 11 ) //back_2
     {
-        ver1.X() = (2*CurrentScene->_textures[info.textureId].width/3)-1;
-        ver1.Y() = (CurrentScene->_textures[info.textureId].height/2)-1;
-        ver1.Z() = 0;
-        ver2.X() = (CurrentScene->_textures[info.textureId].width/3);
-        ver2.Y() = (CurrentScene->_textures[info.textureId].height/2)-1;
-        ver2.Z() = 0;
-        ver3.X() = (CurrentScene->_textures[info.textureId].width/3);
+        ver1.X() = 2 * CurrentScene->_textures[info.textureId].width / 3 - 1;
+        ver1.Y() = CurrentScene->_textures[info.textureId].height / 2 - 1;
+
+        ver2.X() = CurrentScene->_textures[info.textureId].width / 3;
+        ver2.Y() = CurrentScene->_textures[info.textureId].height / 2 - 1;
+
+        ver3.X() = CurrentScene->_textures[info.textureId].width / 3;
         ver3.Y() = 0;
-        ver3.Z() = 0;
     }
 
     info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
@@ -431,10 +417,10 @@ void Camera::findI_J( RayHitInfo& info, Sphere sphere ) const
         }
     }*/
 
-    fi    = -(atan2(temp.Z() - sphere.center.Z(), temp.X() - sphere.center.X())) + M_PI;
+    fi = -(atan2(temp.Z() - sphere.center.Z(), temp.X() - sphere.center.X())) + M_PI;
     if ( fi < 0 )
     { fi = 2 * M_PI + fi; }
-    u = fi / (2 * M_PI);
+    u  = fi / (2 * M_PI);
     info.j = round(u * CurrentScene->_textures[sphere.textureId].width);
     if ( info.j == CurrentScene->_textures[sphere.textureId].width )
     { info.j--; }
@@ -442,8 +428,8 @@ void Camera::findI_J( RayHitInfo& info, Sphere sphere ) const
     theta = acos((temp.Y() - sphere.center.Y()) / sphere.radius);
     if ( theta < 0 )
     { theta += M_PI; }
-    v = (theta) / M_PI;
+    v     = (theta) / M_PI;
     info.i = round(v * CurrentScene->_textures[sphere.textureId].height);
-    if ( info.i == CurrentScene->_textures[sphere.textureId].height)
+    if ( info.i == CurrentScene->_textures[sphere.textureId].height )
     { info.i--; }
 }
