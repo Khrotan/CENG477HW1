@@ -273,9 +273,18 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
         //info.j = round(ver1.X() * info.gamma + ver2.X() * info.beta + ver3.X() * info.alpha);
         //info.i = round(ver1.Y() * info.gamma + ver2.Y() * info.beta + ver3.Y() * info.alpha);
 
-    Vector3 ver1, ver2, ver3;
+    Vector3 ver1(0.0, 0.0, 0.0), ver2(0.0, 0.0, 0.0), ver3(0.0, 0.0, 0.0);
     if ( info.triangleId == 0 ) //up_1 //ok?
     {
+        /*ver1.X() = 2 * CurrentScene->_textures[info.textureId].width / 3;
+        ver1.Y() = CurrentScene->_textures[info.textureId].height / 2;
+
+        ver2.X() = CurrentScene->_textures[info.textureId].width - 1;
+        ver2.Y() = CurrentScene->_textures[info.textureId].height / 2;
+
+        ver3.X() = CurrentScene->_textures[info.textureId].width - 1;
+        ver3.Y() = CurrentScene->_textures[info.textureId].height - 1;*/
+
         ver1.X() = 2 * CurrentScene->_textures[info.textureId].width / 3;
         ver1.Y() = CurrentScene->_textures[info.textureId].height / 2;
 
@@ -288,7 +297,7 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
         info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
         info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
     }
-    else if ( info.triangleId == 1 ) //up_2 //ok?
+    else if ( info.triangleId == 1 )
     {
         ver1.X() = CurrentScene->_textures[info.textureId].width - 1;
         ver1.Y() = CurrentScene->_textures[info.textureId].height - 1;
@@ -302,21 +311,19 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
         info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
         info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
     }
-    else if ( info.triangleId == 2 ) // bottom_1
+    else if ( info.triangleId == 2 )
     {
-        ver1.X() = 2 * CurrentScene->_textures[info.textureId].width / 3 - 1;
-        ver1.Y() = 0;
+        ver1.X() = 2 * CurrentScene->_textures[info.textureId].width / 3;
 
-        ver2.X() = CurrentScene->_textures[info.textureId].width - 1;
-        ver2.Y() = 0;
+        ver2.X() = (CurrentScene->_textures[info.textureId].width) - 1;
 
         ver3.X() = CurrentScene->_textures[info.textureId].width - 1;
-        ver3.Y() = CurrentScene->_textures[info.textureId].height / 2;
+        ver3.Y() = CurrentScene->_textures[info.textureId].height / 2 - 1;
 
         info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
         info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
     }
-    else if ( info.triangleId == 3 ) //bottom_2
+    else if ( info.triangleId == 3 )
     {
         ver1.X() = CurrentScene->_textures[info.textureId].width - 1;
         ver1.Y() = CurrentScene->_textures[info.textureId].height / 2;
@@ -325,18 +332,13 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
         ver2.Y() = CurrentScene->_textures[info.textureId].height / 2;
 
         ver3.X() = 2 * CurrentScene->_textures[info.textureId].width / 3;
-        ver3.Y() = 0;
 
         info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
         info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
     }
-    else if ( info.triangleId == 4 ) //left_1
+    else if ( info.triangleId == 4 )
     {
-        ver1.X() = 0;
-        ver1.Y() = 0;
-
         ver2.X() = CurrentScene->_textures[info.textureId].width / 3;
-        ver2.Y() = 0;
 
         ver3.X() = CurrentScene->_textures[info.textureId].width / 3;
         ver3.Y() = CurrentScene->_textures[info.textureId].height / 2;
@@ -344,21 +346,17 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
         info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
         info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
     }
-    else if ( info.triangleId == 5 ) //left_2
+    else if ( info.triangleId == 5 )
     {
         ver1.X() = CurrentScene->_textures[info.textureId].width / 3;
         ver1.Y() = CurrentScene->_textures[info.textureId].height / 2;
 
-        ver2.X() = 0;
         ver2.Y() = CurrentScene->_textures[info.textureId].height / 2;
-
-        ver3.X() = 0;
-        ver3.Y() = 0;
 
         info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
         info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
     }
-    else if ( info.triangleId == 6 ) //right_1
+    else if ( info.triangleId == 6 )
     {
         ver1.X() = CurrentScene->_textures[info.textureId].width / 3;
         ver1.Y() = CurrentScene->_textures[info.textureId].height / 2;
@@ -372,23 +370,25 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
         info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
         info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
     }
-    else if ( info.triangleId == 7 ) //right_2
+    else if ( info.triangleId == 7 )
     {
         ver1.X() = 2 * CurrentScene->_textures[info.textureId].width / 3;
-        ver1.Y() = CurrentScene->_textures[info.textureId].height;
+        ver1.Y() = CurrentScene->_textures[info.textureId].height - 1;
 
         ver2.X() = CurrentScene->_textures[info.textureId].width / 3;
-        ver2.Y() = CurrentScene->_textures[info.textureId].height;
+        ver2.Y() = CurrentScene->_textures[info.textureId].height - 1;
 
         ver3.X() = CurrentScene->_textures[info.textureId].width / 3;
         ver3.Y() = CurrentScene->_textures[info.textureId].height / 2;
 
         info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
         info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
+
+        info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
+        info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
     }
-    else if ( info.triangleId == 8 ) //front_1 // ok
+    else if ( info.triangleId == 8 )
     {
-        ver1.X() = 0;
         ver1.Y() = CurrentScene->_textures[info.textureId].height / 2;
 
         ver2.X() = CurrentScene->_textures[info.textureId].width / 3;
@@ -399,28 +399,30 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
 
         info.j = round(ver1.X() * info.gamma + ver2.X() * info.alpha + ver3.X() * info.beta);
         info.i = round(ver1.Y() * info.gamma + ver2.Y() * info.alpha + ver3.Y() * info.beta);
+
+        /*info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
+        info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);*/
     }
-    else if ( info.triangleId == 9 ) //front_2 //ok
+    else if ( info.triangleId == 9 )
     {
         ver1.X() = CurrentScene->_textures[info.textureId].width / 3;
         ver1.Y() = CurrentScene->_textures[info.textureId].height - 1;
 
-        ver2.X() = 0;
         ver2.Y() = CurrentScene->_textures[info.textureId].height - 1;
 
-        ver3.X() = 0;
         ver3.Y() = CurrentScene->_textures[info.textureId].height / 2;
 
         info.j = round(ver1.X() * info.beta + ver2.X() * info.gamma + ver3.X() * info.alpha);
         info.i = round(ver1.Y() * info.beta + ver2.Y() * info.gamma + ver3.Y() * info.alpha);
+
+        /*info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
+        info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);*/
     }
-    else if ( info.triangleId == 10 ) //back_1
+    else if ( info.triangleId == 10 )
     {
         ver1.X() = CurrentScene->_textures[info.textureId].width / 3;
-        ver1.Y() = 0;
 
         ver2.X() = 2 * CurrentScene->_textures[info.textureId].width / 3;
-        ver2.Y() = 0;
 
         ver3.X() = 2 * CurrentScene->_textures[info.textureId].width / 3;
         ver3.Y() = CurrentScene->_textures[info.textureId].height / 2;
@@ -428,7 +430,7 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
         info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
         info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
     }
-    else if ( info.triangleId == 11 ) //back_2
+    else if ( info.triangleId == 11 )
     {
         ver1.X() = 2 * CurrentScene->_textures[info.textureId].width / 3;
         ver1.Y() = CurrentScene->_textures[info.textureId].height / 2;
@@ -437,7 +439,6 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
         ver2.Y() = CurrentScene->_textures[info.textureId].height / 2;
 
         ver3.X() = CurrentScene->_textures[info.textureId].width / 3;
-        ver3.Y() = 0;
 
         info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
         info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
@@ -446,27 +447,75 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
 
 void Camera::findI_J( RayHitInfo& info, Sphere sphere ) const
 {
+
     double  theta, fi, u, v;
     Vector3 temp(info.Position);
 
-/*    for ( int j = sphere.transforms.size() - 1 ; j > -1 ; j-- )
+    for ( int i = sphere.transformations.size() - 1 ; i > -1 ; i-- )
     {
-        if ( sphere.transforms[j] == 't' )
+        //reverting back transformations
+        Transformation transformation = sphere.transformations[i];
+        if ( transformation.type == "r" )
         {
-            temp = translateBonus( &temp, translations[sphere.transformIDs[j] - 1], -1 );
+            //http://inside.mines.edu/fs_home/gmurray/ArbitraryAxisRotation/
+            double a, b, c, d, x, y, z;
+            Rotation rot = CurrentScene->_rotations[ transformation.id ];
+
+            a = CurrentScene->_rotations[ transformation.id ].point.X();
+            b = CurrentScene->_rotations[ transformation.id ].point.Y();
+            c = CurrentScene->_rotations[ transformation.id ].point.Z();
+            //cout << a << " " << b << " " << c << endl;
+            d = sqrt((c * c) + (b * b));
+
+            if (d != 0) {
+              y = ((temp.Y() * c) / d) - ((temp.Z() * b) / d);
+              z = ((temp.Y() * b) / d) + ((temp.Z() * c) / d);
+
+              temp.Y() = y;
+              temp.Z() = z;
+            }
+
+            z = (a * temp.X()) + (d * temp.Z());
+            x = (d * temp.X()) - (a * temp.Z());
+            
+            temp.Z() = z;
+            temp.X() = x;
+
+            x = (cos( -rot.alpha * M_PI / 180.0) * temp.X()) - (sin(-rot.alpha * M_PI / 180.0) * temp.Y());
+            y = (cos( -rot.alpha * M_PI / 180.0) * temp.Y()) + (sin(-rot.alpha * M_PI / 180.0) * temp.X());
+            temp.Y() = y;
+            temp.X() = x;
+
+            x = (d * temp.X()) + (a * temp.Z());
+            z = (d * temp.Z()) - (a * temp.X());
+            temp.Z() = z;
+            temp.X() = x;
+
+            if (d != 0) {
+              y = ( temp.Y() / d * c ) + (temp.Z() / d * b);
+              z = ( temp.Z() / d * c ) - (temp.Y() / d * b);
+              temp.Z() = z;
+              temp.Y() = y;
+            }
         }
-        else if ( sphere.transforms[j] == 'r' )
+        if ( transformation.type == "t" )
         {
-            temp = rotationBonus( &temp, rotations[sphere.transformIDs[j] - 1] );
+            temp.X() += CurrentScene->_translations[ transformation.id ].t_x * -1;
+            temp.Y() += CurrentScene->_translations[ transformation.id ].t_y * -1;
+            temp.Z() += CurrentScene->_translations[ transformation.id ].t_z * -1;
         }
     }
-    for ( int j = 0 ; j < sphere.transforms.size() ; j++ )
+
+    for ( int i = 0 ; i < sphere.transformations.size() ; i++ )
     {
-        if ( sphere.transforms[j] == 't' )
+        Transformation transformation = sphere.transformations[i];
+        if ( transformation.type == "t" )
         {
-            temp = translateBonus( &temp, translations[sphere.transformIDs[j] - 1], 1 );
+            temp.X() += CurrentScene->_translations[ transformation.id ].t_x;
+            temp.Y() += CurrentScene->_translations[ transformation.id ].t_y;
+            temp.Z() += CurrentScene->_translations[ transformation.id ].t_z;
         }
-    }*/
+    }
 
     fi = -(atan2(temp.Z() - sphere.center.Z(), temp.X() - sphere.center.X())) + M_PI;
     if ( fi < 0 )

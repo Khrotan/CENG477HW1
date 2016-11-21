@@ -3,6 +3,7 @@
 //
 #include "jpeg_reader/aoa_jpeg.h"
 #include "Scene.h"
+#include "Transformation.h"
 
 
 #define M_PI 3.14159265358979323846
@@ -190,17 +191,28 @@ void ReadScene( int argc, char** argv )
                 int transformationIndex;
                 infile >> dummyString >> transformationIndex;
 
+                Transformation dummyTransformation;
+                dummyTransformation.type = dummyString;
+                dummyTransformation.id = transformationIndex;
+                dummySphere.transformations.push_back( dummyTransformation );
+
                 if ( dummyString == "s" )
                 {
                     dummySphere.scalings.push_back( scene->_scalings[transformationIndex] );
+
+                    dummySphere.applyScaling( scene->_scalings[transformationIndex] );
                 }
                 else if ( dummyString == "r" )
                 {
                     dummySphere.rotations.push_back( scene->_rotations[transformationIndex] );
+
+                    scene->rotatePoint( dummySphere.center, scene->_rotations[transformationIndex] );
                 }
                 else
                 {
                     dummySphere.translations.push_back( scene->_translations[transformationIndex] );
+
+                    dummySphere.applyTranlation( scene->_translations[transformationIndex] );
                 }
             }
 
@@ -223,14 +235,26 @@ void ReadScene( int argc, char** argv )
                 if ( dummyString == "s" )
                 {
                     dummyCube.scalings.push_back( scene->_scalings[transformationIndex] );
+
+                    dummyCube.applyScaling( scene->_scalings[transformationIndex] );
                 }
                 else if ( dummyString == "r" )
                 {
                     dummyCube.rotations.push_back( scene->_rotations[transformationIndex] );
+
+                    for ( auto& triangle : dummyCube.triangles )
+                    {
+                        scene->rotatePoint( triangle.Vid1, scene->_rotations[transformationIndex] );
+                        scene->rotatePoint( triangle.Vid2, scene->_rotations[transformationIndex] );
+                        scene->rotatePoint( triangle.Vid3, scene->_rotations[transformationIndex] );
+                        triangle.computeNormal();
+                    }
                 }
                 else
                 {
                     dummyCube.translations.push_back( scene->_translations[transformationIndex] );
+
+                    dummyCube.applyTranslation( scene->_translations[transformationIndex] );
                 }
             }
 
@@ -240,13 +264,14 @@ void ReadScene( int argc, char** argv )
 
     CurrentScene = scene;
 
-    CurrentScene->applyTransformations();
+    //CurrentScene->applyTransformations();
 }
 
 Scene* CurrentScene;
 
 void Scene::rotatePoint( Vector3& point, Rotation rotation )
 {
+    //http://inside.mines.edu/fs_home/gmurray/ArbitraryAxisRotation/
     double a, b, c, d, x, y, z;
     a = rotation.point.X();
     b = rotation.point.Y();
@@ -255,34 +280,35 @@ void Scene::rotatePoint( Vector3& point, Rotation rotation )
 
     if ( d != 0 )
     {
-        y = ( (point.Y() * c ) / d ) - ( ( point.Z() * b ) / d );
-        z = ( (point.Y() * b ) / d ) + ( ( point.Z() * c ) / d );
+        y = ( point.Y() / d * c ) - ( point.Z() / d * b );
+        z = ( point.Y() / d * b ) + ( point.Z() / d * c );
         point._data[1] = y;
         point._data[2] = z;
     }
 
-    x = ( point.X() * d ) - ( point.Z() * a );
-    z = ( point.X() * a ) + ( point.Z() * d );
-    point._data[0] = x;
+    x = ( d * point.X() ) - ( a * point.Z() );
+    z = ( a * point.X() ) + ( d * point.Z() );
     point._data[2] = z;
-    x = ( point.X() * cos( ( rotation.alpha * M_PI ) / 180.0 ) ) -
-        ( point.Y() * sin( ( rotation.alpha * M_PI ) / 180.0 ) );
-    y = ( point.X() * sin( ( rotation.alpha * M_PI ) / 180.0 ) ) +
-        ( point.Y() * cos( ( rotation.alpha * M_PI ) / 180.0 ) );
     point._data[0] = x;
-    point._data[1] = y;
 
-    x = ( point.X() * d ) + ( point.Z() * a );
-    z = ( point.Z() * d ) - ( point.X() * a );
+    x = ( point.X() * cos(  rotation.alpha * M_PI  / 180.0 ) ) -
+        ( point.Y() * sin(  rotation.alpha * M_PI  / 180.0 ) );
+    y = ( point.X() * sin(  rotation.alpha * M_PI  / 180.0 ) ) +
+        ( point.Y() * cos(  rotation.alpha * M_PI  / 180.0 ) );
+    point._data[1] = y;
     point._data[0] = x;
+
+    x = ( d * point.X() ) + ( a * point.Z() );
+    z = ( d * point.Z() ) - ( a * point.X() );
     point._data[2] = z;
+    point._data[0] = x;
 
     if ( d != 0 )
     {
-        y = ( ( point.Y() * c ) / d ) + ( ( point.Z() * b ) / d );
-        z = ( ( point.Z() * c ) / d ) - ( ( point.Y() * b ) / d );
-        point._data[1] = y;
+        y = ( point.Y() / d * c ) + ( point.Z() / d * b );
+        z = ( point.Z() / d * c ) - ( point.Y() / d * b );
         point._data[2] = z;
+        point._data[1] = y;
     }
 }
 

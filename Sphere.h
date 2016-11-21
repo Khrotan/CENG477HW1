@@ -7,6 +7,7 @@
 #include "Translation.h"
 #include "Rotation.h"
 #include "Scaling.h"
+#include "Transformation.h"
 
 class Sphere
 {
@@ -14,6 +15,7 @@ public:
     std::vector<Translation> translations;
     std::vector<Rotation> rotations;
     std::vector<Scaling> scalings;
+    std::vector<Transformation> transformations;
     int materialId;
     int textureId;
     double radius;

@@ -10,8 +10,9 @@
 
 class Transformation
 {
+public:
     std::string type;
-    double alpha, x, y, z;
+    double alpha, x, y, z, id;
 };
 
 
