@@ -13,8 +13,10 @@ Cube::Cube() :
         vec5( Vector3( 0.5, -0.5, -0.5 ) ),
         vec6( Vector3( -0.5, 0.5, -0.5 ) ),
         vec7( Vector3( -0.5, -0.5, -0.5 ) ),
+        /*up_1( Triangle( vec6, vec2, vec0 ) ),
+        up_2( Triangle( vec4, vec6, vec0 ) ),*/
         up_1( Triangle( vec6, vec2, vec0 ) ),
-        up_2( Triangle( vec6, vec0, vec4 ) ),
+        up_2( Triangle( vec0, vec4, vec6      ) ),
         bottom_1( Triangle( vec1, vec3, vec5 ) ),
         bottom_2( Triangle( vec7, vec5, vec3 ) ),
         left_1( Triangle( vec7, vec3, vec2 ) ),

@@ -254,20 +254,63 @@ bool Camera::fillHitInfo( RayHitInfo& closestRayHitInfo, Ray ray ) const
 
 void Camera::findI_J_cube( RayHitInfo& info ) const
 {
+    //alpha beta gamma
+        //info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
+        //info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
+    //alpha gamma beta
+        //info.j = round(ver1.X() * info.alpha + ver2.X() * info.gamma + ver3.X() * info.beta);
+        //info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.gamma + ver3.Y() * info.beta);
+    //beta alpha gamma
+        //info.j = round(ver1.X() * info.beta + ver2.X() * info.alpha + ver3.X() * info.gamma);
+        //info.i = round(ver1.Y() * info.beta + ver2.Y() * info.alpha + ver3.Y() * info.gamma);
+    //beta gamma alpha
+        //info.j = round(ver1.X() * info.beta + ver2.X() * info.gamma + ver3.X() * info.alpha);
+        //info.i = round(ver1.Y() * info.beta + ver2.Y() * info.gamma + ver3.Y() * info.alpha);
+    //gamma alpha beta
+        //info.j = round(ver1.X() * info.gamma + ver2.X() * info.alpha + ver3.X() * info.beta);
+        //info.i = round(ver1.Y() * info.gamma + ver2.Y() * info.alpha + ver3.Y() * info.beta);
+    //gamma beta alpha
+        //info.j = round(ver1.X() * info.gamma + ver2.X() * info.beta + ver3.X() * info.alpha);
+        //info.i = round(ver1.Y() * info.gamma + ver2.Y() * info.beta + ver3.Y() * info.alpha);
+
     Vector3 ver1, ver2, ver3;
-    if ( info.triangleId == 0 ) //up_1
+    if ( info.triangleId == 0 ) //up_1 //ok?
     {
-        ver1.X() = 2 * CurrentScene->_textures[info.textureId].width / 3;
+        /*ver1.X() = 2 * CurrentScene->_textures[info.textureId].width / 3;
         ver1.Y() = CurrentScene->_textures[info.textureId].height / 2;
 
         ver2.X() = CurrentScene->_textures[info.textureId].width - 1;
         ver2.Y() = CurrentScene->_textures[info.textureId].height / 2;
 
         ver3.X() = CurrentScene->_textures[info.textureId].width - 1;
+        ver3.Y() = CurrentScene->_textures[info.textureId].height - 1;*/
+
+        ver1.X() = 2 * CurrentScene->_textures[info.textureId].width / 3;
+        ver1.Y() = CurrentScene->_textures[info.textureId].height / 2 - 1;
+
+        ver2.X() = CurrentScene->_textures[info.textureId].width - 1;
+        ver2.Y() = CurrentScene->_textures[info.textureId].height / 2 - 1;
+
+        ver3.X() = CurrentScene->_textures[info.textureId].width - 1;
         ver3.Y() = CurrentScene->_textures[info.textureId].height - 1;
+
+        info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
+        info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
     }
-    else if ( info.triangleId == 1 ) //up_2
+    else if ( info.triangleId == 1 ) //up_2 //ok?
     {
+        /*ver1.X() = CurrentScene->_textures[info.textureId].width - 1;
+        ver1.Y() = CurrentScene->_textures[info.textureId].height - 1;
+
+        ver2.X() = 2 * CurrentScene->_textures[info.textureId].width / 3;
+        ver2.Y() = CurrentScene->_textures[info.textureId].height - 1;
+
+        ver3.X() = 2 * CurrentScene->_textures[info.textureId].width / 3;
+        ver3.Y() = CurrentScene->_textures[info.textureId].height / 2;
+
+        info.j = round(ver1.X() * info.gamma + ver2.X() * info.alpha + ver3.X() * info.beta);
+        info.i = round(ver1.Y() * info.gamma + ver2.Y() * info.alpha + ver3.Y() * info.beta);*/
+
         ver1.X() = CurrentScene->_textures[info.textureId].width - 1;
         ver1.Y() = CurrentScene->_textures[info.textureId].height - 1;
 
@@ -276,6 +319,9 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
 
         ver3.X() = 2 * CurrentScene->_textures[info.textureId].width / 3;
         ver3.Y() = CurrentScene->_textures[info.textureId].height / 2;
+
+        info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
+        info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
     }
     else if ( info.triangleId == 2 ) // bottom_1
     {
@@ -287,6 +333,9 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
 
         ver3.X() = (CurrentScene->_textures[info.textureId].width) - 1;
         ver3.Y() = (CurrentScene->_textures[info.textureId].height / 2) - 1;
+
+        info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
+        info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
     }
     else if ( info.triangleId == 3 ) //bottom_2
     {
@@ -298,6 +347,9 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
 
         ver3.X() = (2 * CurrentScene->_textures[info.textureId].width / 3) - 1;
         ver3.Y() = 0;
+
+        info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
+        info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
     }
     else if ( info.triangleId == 4 ) //left_1
     {
@@ -309,6 +361,9 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
 
         ver3.X() = CurrentScene->_textures[info.textureId].width / 3 - 1;
         ver3.Y() = CurrentScene->_textures[info.textureId].height / 2 - 1;
+
+        info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
+        info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
     }
     else if ( info.triangleId == 5 ) //left_2
     {
@@ -320,30 +375,39 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
 
         ver3.X() = 0;
         ver3.Y() = 0;
+
+        info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
+        info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
     }
     else if ( info.triangleId == 6 ) //right_1
     {
-        ver1.X() = CurrentScene->_textures[info.textureId].width / 3;
-        ver1.Y() = CurrentScene->_textures[info.textureId].height / 2;
+        ver1.X() = CurrentScene->_textures[info.textureId].width / 3 - 1;
+        ver1.Y() = CurrentScene->_textures[info.textureId].height / 2 - 1;
 
-        ver2.X() = 2 * CurrentScene->_textures[info.textureId].width / 3 - 1;
-        ver2.Y() = CurrentScene->_textures[info.textureId].height / 2;
+        ver2.X() = CurrentScene->_textures[info.textureId].width / 3 - 1;
+        ver2.Y() = CurrentScene->_textures[info.textureId].height - 1;
 
-        ver3.X() = 2 * CurrentScene->_textures[info.textureId].width / 3 - 1;
-        ver3.Y() = CurrentScene->_textures[info.textureId].height - 1;
+        ver3.X() = 2 * CurrentScene->_textures[info.textureId].width / 3;
+        ver3.Y() = CurrentScene->_textures[info.textureId].height / 2 - 1;
+
+        info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
+        info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
     }
     else if ( info.triangleId == 7 ) //right_2
     {
         ver1.X() = 2 * CurrentScene->_textures[info.textureId].width / 3 - 1;
         ver1.Y() = (CurrentScene->_textures[info.textureId].height) - 1;
 
-        ver2.X() = CurrentScene->_textures[info.textureId].width / 3;
+        ver2.X() = CurrentScene->_textures[info.textureId].width / 3 - 1;
         ver2.Y() = (CurrentScene->_textures[info.textureId].height) - 1;
 
-        ver3.X() = CurrentScene->_textures[info.textureId].width / 3;
+        ver3.X() = CurrentScene->_textures[info.textureId].width / 3 - 1;
         ver3.Y() = CurrentScene->_textures[info.textureId].height / 2;
+
+        info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
+        info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
     }
-    else if ( info.triangleId == 8 ) //front_1
+    else if ( info.triangleId == 8 ) //front_1 // ok
     {
         ver1.X() = 0;
         ver1.Y() = CurrentScene->_textures[info.textureId].height / 2;
@@ -353,8 +417,11 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
 
         ver3.X() = CurrentScene->_textures[info.textureId].width / 3 - 1;
         ver3.Y() = CurrentScene->_textures[info.textureId].height - 1;
+
+        info.j = round(ver1.X() * info.gamma + ver2.X() * info.alpha + ver3.X() * info.beta);
+        info.i = round(ver1.Y() * info.gamma + ver2.Y() * info.alpha + ver3.Y() * info.beta);
     }
-    else if ( info.triangleId == 9 ) //front_2
+    else if ( info.triangleId == 9 ) //front_2 //ok
     {
         ver1.X() = CurrentScene->_textures[info.textureId].width / 3 - 1;
         ver1.Y() = CurrentScene->_textures[info.textureId].height - 1;
@@ -364,6 +431,9 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
 
         ver3.X() = 0;
         ver3.Y() = CurrentScene->_textures[info.textureId].height / 2;
+
+        info.j = round(ver1.X() * info.beta + ver2.X() * info.gamma + ver3.X() * info.alpha);
+        info.i = round(ver1.Y() * info.beta + ver2.Y() * info.gamma + ver3.Y() * info.alpha);
     }
     else if ( info.triangleId == 10 ) //back_1
     {
@@ -375,6 +445,9 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
 
         ver3.X() = 2 * CurrentScene->_textures[info.textureId].width / 3 - 1;
         ver3.Y() = CurrentScene->_textures[info.textureId].height / 2 - 1;
+
+        info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
+        info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
     }
     else if ( info.triangleId == 11 ) //back_2
     {
@@ -386,10 +459,10 @@ void Camera::findI_J_cube( RayHitInfo& info ) const
 
         ver3.X() = CurrentScene->_textures[info.textureId].width / 3;
         ver3.Y() = 0;
-    }
 
-    info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
-    info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
+        info.j = round(ver1.X() * info.alpha + ver2.X() * info.beta + ver3.X() * info.gamma);
+        info.i = round(ver1.Y() * info.alpha + ver2.Y() * info.beta + ver3.Y() * info.gamma);
+    }
 }
 
 void Camera::findI_J( RayHitInfo& info, Sphere sphere ) const
